@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="医疗图像,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="experience in the Tianchi Lung Nodule Detection Contest">
+<meta name="keywords" content="医疗图像">
+<meta property="og:type" content="article">
+<meta property="og:title" content="肺部结节检测">
+<meta property="og:url" content="http://yoursite.com/2017/04/25/tech-2017-4-25-luna/index.html">
+<meta property="og:site_name" content="剑来小站">
+<meta property="og:description" content="experience in the Tianchi Lung Nodule Detection Contest">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1156558-a483ffcb4ca3d4ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/gl9og6z21zzipkk90fsjitdy/image_1cdrhtvlq1v291i8a1ah217faiu89.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/e5wzvf8xqvmdu9hl73xkh0b0/image_1cdri1e721nbp1c7k1ve5nu2tpd1m.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/qbtrueqt9qagfxkd0opwblcc/image_1cdri1qfm19g6t1e1bbg13441a3e23.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/tqmuwhoyh6eu3sszw55ckjfi/image_1cdrljm251gjg108t17fj1eit1bb92g.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/tdqvxjb59e1p5jfxo2dykw88/image_1ce5gjlu619aq325k941e6o14p29.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/cv3ice16g6d1cir64spqbjum/image_1ce6iegtia0mjhs46f1q3n1e1e9.png">
+<meta property="og:updated_time" content="2019-02-21T10:30:42.923Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="肺部结节检测">
+<meta name="twitter:description" content="experience in the Tianchi Lung Nodule Detection Contest">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1156558-a483ffcb4ca3d4ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/25/tech-2017-4-25-luna/">
+
+
+
+
+
+  <title>肺部结节检测 | 剑来小站</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑来小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/25/tech-2017-4-25-luna/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="随缘集">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑来小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">肺部结节检测</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T21:38:00+08:00">
+                2017-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tech/" itemprop="url" rel="index">
+                    <span itemprop="name">tech</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  experience in the Tianchi Lung Nodule Detection Contest
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="图像处理基础"><a href="#图像处理基础" class="headerlink" title="图像处理基础"></a>图像处理基础</h1><ul>
+<li><code>origin</code>：表示CT图像最边缘的坐标</li>
+<li><code>sapcing</code>：真实世界和像素的比例关系</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1156558-a483ffcb4ca3d4ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="此处输入图片的描述"></p>
+<ul>
+<li>统一spacing到0.5x0.5x0.5mm，也就是说96x96的patch对应现实中48x48mmm</li>
+</ul>
+<p>预处理阶段可能用到的包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from skimage.segmentation import clear_border</span><br><span class="line">from skimage.measure import label, regionprops</span><br><span class="line">from skimage.filters import roberts, sobel</span><br><span class="line">from scipy import ndimage as ndi</span><br><span class="line">from mpl_toolkits.mplot3d.art3d import Poly3DCollection # 用于可视化3d图像</span><br><span class="line">from skimage.morphology import ball, disk, dilation, binary_erosion, remove_small_objects, erosion, closing, reconstruction, binary_closing</span><br></pre></td></tr></table></figure>
+<h2 id="肺部区域分割"><a href="#肺部区域分割" class="headerlink" title="肺部区域分割"></a>肺部区域分割</h2><p>参考<a href="https://www.kaggle.com/arnavkj95/candidate-generation-and-luna16-preprocessing/code" target="_blank" rel="noopener">Candidate Generation and LUNA16 preprocessing
+</a>可实现肺部区域的分割，从而为下一步提取3d cube做准备。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">def segment_lung_from_ct_scan(ct_scan):</span><br><span class="line">    return np.asarray([get_segmented_lungs(slice) for slice in ct_scan])</span><br><span class="line"></span><br><span class="line">def get_segmented_lungs(im, plot=False):</span><br><span class="line"></span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    This funtion segments the lungs from the given 2D slice.</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    if plot == True:</span><br><span class="line">        f, plots = plt.subplots(8, 1, figsize=(5, 40))</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    Step 1: Convert into a binary image.</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    binary = im &lt; 200</span><br><span class="line">    if plot == True:</span><br><span class="line">        plots[0].axis(&apos;off&apos;)</span><br><span class="line">        plots[0].imshow(binary, cmap=plt.cm.bone)</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    Step 2: Remove the blobs connected to the border of the image.</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    cleared = clear_border(binary)</span><br><span class="line">    if plot == True:</span><br><span class="line">        plots[1].axis(&apos;off&apos;)</span><br><span class="line">        plots[1].imshow(cleared, cmap=plt.cm.bone)</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    Step 3: Label the image.</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    label_image = label(cleared)</span><br><span class="line">    if plot == True:</span><br><span class="line">        plots[2].axis(&apos;off&apos;)</span><br><span class="line">        plots[2].imshow(label_image, cmap=plt.cm.bone)</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    Step 4: Keep the labels with 2 largest areas.</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    areas = [r.area for r in regionprops(label_image)]</span><br><span class="line">    areas.sort()</span><br><span class="line">    if len(areas) &gt; 2:</span><br><span class="line">        for region in regionprops(label_image):</span><br><span class="line">            if region.area &lt; areas[-2]:</span><br><span class="line">                for coordinates in region.coords:</span><br><span class="line">                       label_image[coordinates[0], coordinates[1]] = 0</span><br><span class="line">    binary = label_image &gt; 0</span><br><span class="line">    if plot == True:</span><br><span class="line">        plots[3].axis(&apos;off&apos;)</span><br><span class="line">        plots[3].imshow(binary, cmap=plt.cm.bone)</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    Step 5: Erosion operation with a disk of radius 2. This operation is</span><br><span class="line">    seperate the lung nodules attached to the blood vessels.</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    selem = disk(2)</span><br><span class="line">    binary = binary_erosion(binary, selem)</span><br><span class="line">    if plot == True:</span><br><span class="line">        plots[4].axis(&apos;off&apos;)</span><br><span class="line">        plots[4].imshow(binary, cmap=plt.cm.bone)</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    Step 6: Closure operation with a disk of radius 10. This operation is</span><br><span class="line">    to keep nodules attached to the lung wall.</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    selem = disk(10)</span><br><span class="line">    binary = binary_closing(binary, selem)</span><br><span class="line">    if plot == True:</span><br><span class="line">        plots[5].axis(&apos;off&apos;)</span><br><span class="line">        plots[5].imshow(binary, cmap=plt.cm.bone)</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    Step 7: Fill in the small holes inside the binary mask of lungs.</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    edges = roberts(binary)</span><br><span class="line">    binary = ndi.binary_fill_holes(edges)</span><br><span class="line">    if plot == True:</span><br><span class="line">        plots[6].axis(&apos;off&apos;)</span><br><span class="line">        plots[6].imshow(binary, cmap=plt.cm.bone)</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    Step 8: Superimpose the binary mask on the input image.</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">#     get_high_vals = binary == 0</span><br><span class="line">#     im[get_high_vals] = 0</span><br><span class="line">#     if plot == True:</span><br><span class="line">#         plots[7].axis(&apos;off&apos;)</span><br><span class="line">#         plots[7].imshow(im, cmap=plt.cm.bone)</span><br><span class="line"></span><br><span class="line">    return binary</span><br></pre></td></tr></table></figure>
+<p><img src="http://static.zybuluo.com/sixijinling/gl9og6z21zzipkk90fsjitdy/image_1cdrhtvlq1v291i8a1ah217faiu89.png" alt="image_1cdrhtvlq1v291i8a1ah217faiu89.png-83kB"></p>
+<p>可视化3d肺部分割</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">def plot_3d(image, threshold=-300):</span><br><span class="line">    from skimage import measure, feature</span><br><span class="line"></span><br><span class="line">    # Position the scan upright,</span><br><span class="line">    # so the head of the patient would be at the top facing the camera</span><br><span class="line">    p = image.transpose(2,1,0)</span><br><span class="line">    p = p[:,:,::-1]</span><br><span class="line"></span><br><span class="line">#     print measure.marching_cubes(p, threshold)</span><br><span class="line">    verts, faces, _, _= measure.marching_cubes(p, threshold)</span><br><span class="line"></span><br><span class="line">    fig = plt.figure(figsize=(10, 10))</span><br><span class="line">    ax = fig.add_subplot(111, projection=&apos;3d&apos;)</span><br><span class="line"></span><br><span class="line">    # Fancy indexing: `verts[faces]` to generate a collection of triangles</span><br><span class="line">    mesh = Poly3DCollection(verts[faces], alpha=0.1)</span><br><span class="line">    face_color = [0.5, 0.5, 1]</span><br><span class="line">    mesh.set_facecolor(face_color)</span><br><span class="line">    ax.add_collection3d(mesh)</span><br><span class="line"></span><br><span class="line">    ax.set_xlim(0, p.shape[0])</span><br><span class="line">    ax.set_ylim(0, p.shape[1])</span><br><span class="line">    ax.set_zlim(0, p.shape[2])</span><br><span class="line"></span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://static.zybuluo.com/sixijinling/e5wzvf8xqvmdu9hl73xkh0b0/image_1cdri1e721nbp1c7k1ve5nu2tpd1m.png" alt="image_1cdri1e721nbp1c7k1ve5nu2tpd1m.png-134.4kB"></p>
+<p>去除假阳性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">selem = ball(10)</span><br><span class="line">binary = binary_opening(segmented_ct_scan, selem)</span><br><span class="line"></span><br><span class="line">label_scan = label(binary)</span><br><span class="line"></span><br><span class="line">areas = [r.area for r in regionprops(label_scan)] # 找连通区域</span><br><span class="line">areas.sort()</span><br><span class="line">print areas</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://static.zybuluo.com/sixijinling/qbtrueqt9qagfxkd0opwblcc/image_1cdri1qfm19g6t1e1bbg13441a3e23.png" alt="image_1cdri1qfm19g6t1e1bbg13441a3e23.png-128kB"></p>
+<p>提取3d cube作为inference输入，所有cube的可视化：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/tqmuwhoyh6eu3sszw55ckjfi/image_1cdrljm251gjg108t17fj1eit1bb92g.png" alt="image_1cdrljm251gjg108t17fj1eit1bb92g.png-149.5kB"></p>
+<p>差一步normalize到相同pixel spacing的过程：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/tdqvxjb59e1p5jfxo2dykw88/image_1ce5gjlu619aq325k941e6o14p29.png" alt="image_1ce5gjlu619aq325k941e6o14p29.png-142.7kB"></p>
+<p>检查：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/cv3ice16g6d1cir64spqbjum/image_1ce6iegtia0mjhs46f1q3n1e1e9.png" alt="image_1ce6iegtia0mjhs46f1q3n1e1e9.png-16.5kB"></p>
+<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>考虑到3d场景下做目标检测的计算量，通常分两个阶段，先筛出可疑对象，再筛掉假阳性：</p>
+<h2 id="Stage-1：Candidates-Proposal"><a href="#Stage-1：Candidates-Proposal" class="headerlink" title="Stage 1：Candidates Proposal"></a>Stage 1：Candidates Proposal</h2><p>这个阶段的任务是尽可能找出所有可能是结节的候选（candidate）</p>
+<h3 id="思路1：Segmentation"><a href="#思路1：Segmentation" class="headerlink" title="思路1：Segmentation"></a>思路1：Segmentation</h3><p>例如U-net，</p>
+<h4 id="Merge-Candidates"><a href="#Merge-Candidates" class="headerlink" title="Merge Candidates"></a>Merge Candidates</h4><p>先腐蚀，再算连通性，再取label，每个label代表一个candidate，取mass中心，存储为csv<br>对照annotations.csv得到每个candidate的是TP还是FP的label，得到新的csv（最后一列为true/false的标记）<br>欧式距离</p>
+<h3 id="思路2-Object-Detection"><a href="#思路2-Object-Detection" class="headerlink" title="思路2: Object Detection"></a>思路2: Object Detection</h3><p>例如Faster RCNN，使用2D模型处理3D检测问题，例如每个通道代表z轴的一个slice，这样就有3个slice组成的3通道二维图像，即形如$$600\times 600 \times 3$$的image。每个通道可以是相邻的slice。</p>
+<p>需要注意的是：考虑到肺结节的尺度比常规的自然图像中的物体要小得多，而原始的Faster RCNN使用的是16倍降采样（VGG-16Net的前四个卷积group作为feature extraction），需要通过减小降采样的方式提升ROI检测的效果。有两种思路：</p>
+<ol>
+<li>减少feature extractor的maxpooling层：例如删掉某个group中的maxpooling</li>
+<li>在feature extractor最后增加deconvolutional layer：例如 <code>nn.ConvTranspose2d(1024, 1024, 4, 4, 4)</code>会上采样4倍，这样最终是降采样4倍</li>
+</ol>
+<p>另一个相伴相生的问题：标注的大小。normalize之后的结节标注可能只有1个像素大小（可能是医生标注的问题），这样即使是4倍下采样也达不到检出效果。我的方案是中心不变、扩大到8个像素。</p>
+<h4 id="RPN"><a href="#RPN" class="headerlink" title="RPN"></a>RPN</h4><ul>
+<li>input：image;</li>
+<li>output：一系列矩形框，代表ROI，每个框都有一个objectness score，代表是物体的概率。</li>
+</ul>
+<h2 id="Stage2：False-Positive-Reduction"><a href="#Stage2：False-Positive-Reduction" class="headerlink" title="Stage2：False Positive  Reduction"></a>Stage2：False Positive  Reduction</h2><h3 id="2D-Resnet"><a href="#2D-Resnet" class="headerlink" title="2D Resnet"></a>2D Resnet</h3><p>可参考<a href="https://github.com/gzuidhof/luna16" target="_blank" rel="noopener">LUNA16 Lung Nodule Analysis</a></p>
+<p>First we equalize the spacings tp 0.5mm0.5mm0.5mm using src/data_processing/equalize_spacings.py. Then we create the 96x96 patches in all three orientations using src/data_processing/create_xy_xz_yz_CARTESIUS.py. Scripts to perform this using SLURM for job management (will require some editing of paths) can be found in /scripts/create_patches/ and /scripts/rescale</p>
+<ul>
+<li>取三个轴向的切面(patch)，根据candidate的label存储在true/false文件夹下</li>
+</ul>
+<h3 id="3d-conv"><a href="#3d-conv" class="headerlink" title="3d conv"></a>3d conv</h3><p>由于ct是三维的，考虑使用常见的2d U-net的3d版本。</p>
+<p>可参考：</p>
+<ul>
+<li><a href="https://www.kaggle.com/c/data-science-bowl-2017/details/tutorial" target="_blank" rel="noopener">U-Net Segmentation Approach to Cancer Diagnosis</a></li>
+<li>在luna上的3dconv的unet实现：<a href="https://github.com/Wrosinski/Kaggle-DSB/blob/master/LUNA/models/U-Net%203D/3DUNet_train_generator.py" target="_blank" rel="noopener">Kaggle U-net</a></li>
+<li>keras 提供的<a href="https://keras-cn.readthedocs.io/en/latest/layers/convolutional_layer/" target="_blank" rel="noopener">conv3d</a>：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">keras.layers.convolutional.Conv3D(</span><br><span class="line">    filters, # 卷积核的数目（即输出的维度）</span><br><span class="line">    kernel_size, # 单个整数或由3个整数构成的list/tuple，卷积核的宽度和长度。如为单个整数，则表示在各个空间维度的相同长度。</span><br><span class="line">    strides=(1, 1, 1),</span><br><span class="line">    padding=&apos;valid&apos;,</span><br><span class="line">    data_format=None,</span><br><span class="line">    dilation_rate=(1, 1, 1),</span><br><span class="line">    activation=None,</span><br><span class="line">    use_bias=True,</span><br><span class="line">    kernel_initializer=&apos;glorot_uniform&apos;,</span><br><span class="line">    bias_initializer=&apos;zeros&apos;,</span><br><span class="line">    kernel_regularizer=None,</span><br><span class="line">    bias_regularizer=None,</span><br><span class="line">    activity_regularizer=None,</span><br><span class="line">    kernel_constraint=None,</span><br><span class="line">    bias_constraint=None)</span><br></pre></td></tr></table></figure>
+<p>三维卷积对三维的输入进行滑动窗卷积，当使用该层作为第一层时，应提供input_shape参数。例如input_shape = (3,10,128,128)代表对10帧128*128的彩色RGB图像进行卷积。数据的通道位置仍然有data_format参数指定。</p>
+<p>输入shape</p>
+<ul>
+<li><p><code>‘channels_first’</code>模式下，输入应为形如<code>（samples，channels，input_dim1，input_dim2, input_dim3）</code>的5D张量</p>
+</li>
+<li><p><code>‘channels_last’</code>模式下，输入应为形如<code>（samples，input_dim1，input_dim2, input_dim3，channels）</code>的5D张量</p>
+</li>
+</ul>
+<p>这里的输入shape指的是函数内部实现的输入shape，而非函数接口应指定的input_shape。</p>
+<h1 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h1><p><a href="https://luna16.grand-challenge.org/evaluation/" target="_blank" rel="noopener">Luna官方说明</a>：The evaluation is performed by measuring the detection sensitivity of the algorithm and the corresponding false positive rate per scan.</p>
+<ul>
+<li>TP判定（hit criterion）：candidate必须是在standard reference 中以nodule center为中心的半径R（结节直径除2）之内。hit到一个正例之后就将这个例子从表中除去，保证不重复计数。也就是说，又有第二个预测点hit到这个结节时就被忽略，不算TP。</li>
+<li>FP判定：在设定的半径距离内没有hit到任何reference结节.</li>
+<li>忽略的情况：Candidates that are detecting irrelevant findings (see Data section in this page for definition) are ignored during the evaluation and are not considered either false positives or true positives.</li>
+</ul>
+<p>最终的分数是取7个横座标点对应的纵座标（TPR）均值：</p>
+<ul>
+<li>横座标（FPR）： 1/8, 1/4, 1/2, 1, 2, 4, and 8 FPs per scan</li>
+<li>完美是1，最低是0. Most CAD systems in clinical use today have their internal threshold set to operate somewhere between 1 to 4 false positives per scan on average. Some systems allow the user to vary the threshold. To make the task more challenging, we included low false positive rates in our evaluation. This determines if a system can also identify a significant percentage of nodules with very few false alarms, as might be needed for CAD algorithms that operate more or less autonomously.</li>
+</ul>
+<p>论文里关于FROC的说明：</p>
+<p>sensitivity是关于FPR平均值的函数：</p>
+<p>This means that the sensitivity (y) is plotted as a function of the average number of false positive markers per scan ().</p>
+<ul>
+<li>计算FROC曲线：阈值为t，概率p≥ t则判定为结节，由此计算TPR、FPR，得到曲线上的一个点。</li>
+<li>图像ID号（seriesuid）：发现结果所在的scan的名字。</li>
+<li>三维坐标：浮点数（用小数点，不要用逗号）。注意：我们提供的数据的第一个体素（voxel） 的坐标是 (-128.6,-175.3,-298.3). Coordinates are given in world coordinates or millimeters. You can verify if you use the correct way of addressing voxels by checking the supplied coordinates for the example data, the locations should refer to locations that hold a nodule.</li>
+<li>probability : 描述为真结节的可疑程度，浮点数。通过调节对它设定的<strong>阈值</strong>来计算 <strong>FROC曲线</strong>。</li>
+</ul>
+<p>Between the strings and the numbers should be a comma character. The order of the lines is irrelevant.</p>
+<p>The following is an example result file:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">seriesuid,coordX,coordY,coordZ,probability</span><br><span class="line">LKDS_00001,75.5,56.0,-194.254518072,6.5243e-05</span><br><span class="line">LKDS_00002,-35.5999634723,78.000078755,-13.3814265714,0.00269234</span><br><span class="line">LKDS_00003,80.2837837838,198.881575673,-572.700012,0.00186072</span><br><span class="line">LKDS_00004,-98.8499883785,33.6429184312,-99.7736607907,0.00035473</span><br><span class="line">LKDS_00005,98.0667072477,-46.4666486536,-141.421980179,0.000256219</span><br></pre></td></tr></table></figure>
+<p>This file contains 8 findings (obviously way too few). There are 5 unique likelihood values. This means that there will be 5 unique thresholds that produce a distinct set of findings (each threshold discards finding below the threshold. That means there will be 5 points on the FROC curve.</p>
+<p>It has to be noted that for the ‘false positive reduction’ challenge track, 551,065 findings (the amount of given candidates) are expected. The order of the lines is irrelevant.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="随缘集 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="随缘集 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/医疗图像/" rel="tag"># 医疗图像</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/03/book-2017-1-3-Socialism/" rel="next" title="《观念的水位》+《柏林墙》">
+                <i class="fa fa-chevron-left"></i> 《观念的水位》+《柏林墙》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/01/tech-2017-8-1-phoneme/" rel="prev" title="基于音素识别的语音相似度研究">
+                基于音素识别的语音相似度研究 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80Mjc5MS8xOTMzOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">随缘集</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/frcmail" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:frcmail@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友链
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.guancha.cn/" title="观察者网" target="_blank">观察者网</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#图像处理基础"><span class="nav-number">1.</span> <span class="nav-text">图像处理基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#肺部区域分割"><span class="nav-number">1.1.</span> <span class="nav-text">肺部区域分割</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型"><span class="nav-number">2.</span> <span class="nav-text">模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Stage-1：Candidates-Proposal"><span class="nav-number">2.1.</span> <span class="nav-text">Stage 1：Candidates Proposal</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路1：Segmentation"><span class="nav-number">2.1.1.</span> <span class="nav-text">思路1：Segmentation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Merge-Candidates"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">Merge Candidates</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路2-Object-Detection"><span class="nav-number">2.1.2.</span> <span class="nav-text">思路2: Object Detection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RPN"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">RPN</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stage2：False-Positive-Reduction"><span class="nav-number">2.2.</span> <span class="nav-text">Stage2：False Positive  Reduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2D-Resnet"><span class="nav-number">2.2.1.</span> <span class="nav-text">2D Resnet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3d-conv"><span class="nav-number">2.2.2.</span> <span class="nav-text">3d conv</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#评价指标"><span class="nav-number">3.</span> <span class="nav-text">评价指标</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">随缘集</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

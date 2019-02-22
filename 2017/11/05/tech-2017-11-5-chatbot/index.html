@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="chatbot,NLP,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Rasa_NLU + Rasa_Core + wxpy = Wechat chatbot">
+<meta name="keywords" content="chatbot,NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Rasa_NLU的微信chatbot">
+<meta property="og:url" content="http://yoursite.com/2017/11/05/tech-2017-11-5-chatbot/index.html">
+<meta property="og:site_name" content="剑来小站">
+<meta property="og:description" content="Rasa_NLU + Rasa_Core + wxpy = Wechat chatbot">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/4ikgpihwlkpxok2ermifmsnv/v2-895d6f2a684116784a2e36b53f390b4d_r.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/vyre1flvuz6rb221u3nldl90/rasa_arch_colour.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/valk10twf1intzykw525yvao/rasa_arch_colour.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/3je6ju7ougwawfp9kw7fl93a/IMG_0311.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/fbnay1uihmjwxpb0sy76nthe/qrcode_for_gh_b9b48c1d57b2_430.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/d59c719oihk9ljiz53gpprle/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-11-26%2014.02.43.png">
+<meta property="og:updated_time" content="2019-02-21T10:30:42.923Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于Rasa_NLU的微信chatbot">
+<meta name="twitter:description" content="Rasa_NLU + Rasa_Core + wxpy = Wechat chatbot">
+<meta name="twitter:image" content="http://static.zybuluo.com/sixijinling/4ikgpihwlkpxok2ermifmsnv/v2-895d6f2a684116784a2e36b53f390b4d_r.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/05/tech-2017-11-5-chatbot/">
+
+
+
+
+
+  <title>基于Rasa_NLU的微信chatbot | 剑来小站</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑来小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/tech-2017-11-5-chatbot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="随缘集">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑来小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基于Rasa_NLU的微信chatbot</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T00:00:00+08:00">
+                2017-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  Rasa_NLU + Rasa_Core + wxpy = Wechat chatbot
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="重要资料"><a href="#重要资料" class="headerlink" title="重要资料"></a>重要资料</h1><p>chatbot三步走：nlu model-&gt;dialogue policy-&gt;agent</p>
+<ul>
+<li>本项目的github地址：<a href="https://github.com/Rowl1ng/rasa_wechat" target="_blank" rel="noopener">Rasa_wechat</a></li>
+<li>视频讲解（正文+编程+QA）：<a href="https://www.bilibili.com/video/av16505671/" target="_blank" rel="noopener">bilibili</a></li>
+<li><a href="https://rasa.com/docs/nlu/" target="_blank" rel="noopener">Rasa_NLU官方文档</a></li>
+<li><a href="https://core.rasa.ai/index.html" target="_blank" rel="noopener">Rasa_Core官方文档</a></li>
+<li><a href="http://wxpy.readthedocs.io/zh/latest/index.html" target="_blank" rel="noopener">wxpy文档</a></li>
+<li>关于机器学习的数学基础和理论介绍，我整理在<a href="http://rowl1ng.com/mybook/README%203.html" target="_blank" rel="noopener">机器学习Gitbook</a></li>
+</ul>
+<h1 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h1><ul>
+<li>老式chatbot基于大量规则库，不好维护。ps: 一个比较有意思例子是<a href="https://baike.baidu.com/item/%E4%BC%AA%E6%98%A5%E8%8F%9C" target="_blank" rel="noopener">伪春菜</a>。</li>
+<li>主流架构为”<strong>NLU自然语言理解+DM对话管理+NLG自然语言生成</strong>”，也就是上图展示的除ASR和TTS的部分。<ul>
+<li><strong>NLU</strong>负责基础自然语言处理，主要目标是<strong>意图识别</strong>与<strong>实体识别</strong>；</li>
+<li><strong>DM</strong>负责<strong>对话状态维护</strong>、<strong>数据库查询</strong>等；</li>
+<li><strong>NLG</strong>负责生成<strong>交互的自然语言</strong>。</li>
+</ul>
+</li>
+<li>机器学习尤其是深度学习在不断改进NLU、DM和NLG，乃至颠覆整个架构：<ul>
+<li>每一个模块都换成DL模型，甚至再加入User Simulator做强化学习，进行端到端的训练；</li>
+<li>Memory Networks：将整个知识库都encode在一个复杂的深度网络中，然后再和encode过的问题结合起来decode生成答案，可参考<a href="https://www.bilibili.com/video/av12005540/?from=search&amp;seid=16935660224461089205" target="_blank" rel="noopener">Siraj Raval的视频</a>。这个工作最多还是应用在机器阅读理解上，在垂直领域任务导向的chatbot上的成功应用还有待观察。</li>
+</ul>
+</li>
+</ul>
+<h1 id="步入正题"><a href="#步入正题" class="headerlink" title="步入正题"></a>步入正题</h1><p>现在的chatbot一种是纯聊天（比如小黄鸡），一种是针对特定商业应用（比如智能客服），这里介绍的其实更偏向后一种。</p>
+<p>我们这里要用的<a href="https://github.com/RasaHQ/rasa_nlu" target="_blank" rel="noopener">Rasa_NLU</a>以及后面介绍的<a href="https://github.com/RasaHQ/rasa_core" target="_blank" rel="noopener">Rasa_Core</a>是<a href="http://rasa.ai/" target="_blank" rel="noopener">rasa.ai</a>提供的开源工具，支持Python 2和3，可以本地部署，自己针对实际需求训练和调整模型，在商业chatbot设计上有颇多考量。此外，我们加上了微信的python接口<code>wxpy</code>来实现微信端的交互，其流程图如下：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/4ikgpihwlkpxok2ermifmsnv/v2-895d6f2a684116784a2e36b53f390b4d_r.png" alt="流程图"><br>（图片来自Rasa_Core官网）</p>
+<p>最上面的<code>Rasa_NLU</code>就是最开始讲到的负责<strong>自然语言理解</strong>的部分，而最下面的<code>Rasa_Core</code>则是在得到了<code>intent</code>和<code>entities</code>之后负责生成<code>next_action</code>以及自然语言的回复。最左边的一问一答则由<code>wxpy</code>来完成监听消息和发送消息的任务。</p>
+<p><img src="http://static.zybuluo.com/sixijinling/vyre1flvuz6rb221u3nldl90/rasa_arch_colour.png" alt="rasa_arch_colour.png-29.6kB"></p>
+<p>用伪代码表示的话：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#输入</span></span><br><span class="line">input_string=<span class="string">""</span></span><br><span class="line"><span class="comment">#意图识别</span></span><br><span class="line">intent_object=intent(input_string)</span><br><span class="line"><span class="comment">#回复生成</span></span><br><span class="line">response=policy(intent_object)</span><br><span class="line"><span class="comment">#返回用户</span></span><br><span class="line">print(response)</span><br></pre></td></tr></table></figure>
+<p>把大象塞进冰箱的第一步是？</p>
+<p>打开冰箱门。先不要着急，首先你得明确想做一个什么样的机器人。比如我想做一个”<code>你妈喊你回家吃饭</code>“，就是当我说”我饿了”，机器人能像我妈一样问我想吃啥，或者叮嘱我早睡早起少吃麻辣烫。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir mom &amp;&amp; cd mom</span><br></pre></td></tr></table></figure>
+<p>现在我们需要两种材料，分别对应NLU和对话管理模块：</p>
+<ul>
+<li>训练数据：nlu examples + dialogue stories</li>
+<li>配置文件：nlu config + dialogue domain</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mom/</span><br><span class="line">├── data/</span><br><span class="line">│   ├── stories.md            # dialogue training data</span><br><span class="line">│   └── nlu.md                # nlu training data</span><br><span class="line">├── domain.yml                # dialogue configuration</span><br><span class="line">└── nlu_model_config.json     # nlu configuration</span><br></pre></td></tr></table></figure>
+<p>下面先来介绍NLU的部分。</p>
+<h2 id="自然语言理解：Rasa-NLU"><a href="#自然语言理解：Rasa-NLU" class="headerlink" title="自然语言理解：Rasa NLU"></a>自然语言理解：Rasa NLU</h2><p>针对用户的问题，NLU模块的任务是：</p>
+<ol>
+<li>意图识别 (Intent)：在<strong>句子级别</strong>进行分类，明确意图；</li>
+<li>实体识别 (Entity)：在<strong>词级别</strong>找出用户问题中的<strong>关键实体</strong>，进行实体槽填充(Slot Filling)。</li>
+</ol>
+<p>举个例子，当我说“我想吃羊肉泡馍”，NLU模块就可以识别出用户的意图是“寻找餐馆”，而关键实体是“羊肉泡馍”。有了意图和关键实体，就方便了后面对话管理模块进行后端数据库的查询或是有缺失信息而来继续多轮对话补全其它缺失的实体槽。</p>
+<p>已有的NLU工具，大多是以服务的方式，通过调用远程http的restful API来对目标语句进行解析完成上述两个任务，例如Google的API.ai, Microsoft的Luis.ai, Facebook的Wit.ai等。</p>
+<p>事实上，申请到这类API的话<a href="http://wxpy.readthedocs.io/zh/latest/utils.html?highlight=%E5%9B%BE%E7%81%B5%E6%9C%BA%E5%99%A8%E4%BA%BA" target="_blank" rel="noopener">用几行代码即可完成一个chatbot</a>，亦可参考<a href="http://www.jianshu.com/p/c6067ec268e3" target="_blank" rel="noopener">使用图灵机器人和api.ai相关接口</a>。如果想从零开始动手实现NLU，推荐阅读<a href="https://medium.com/rasa-blog/do-it-yourself-nlp-for-bot-developers-2e2da2817f3d" target="_blank" rel="noopener">Do-it-yourself NLP for bot developers</a>。</p>
+<p>遗憾的是，<a href="https://github.com/RasaHQ/rasa_nlu" target="_blank" rel="noopener">Rasa_NLU</a>官方现在支持<strong>任何语言</strong>啦！这里暂时参考<a href="https://github.com/crownpku/rasa_nlu_chi" target="_blank" rel="noopener">基于中文的Rasa NLU</a>来训练自己的中文NLU模型，不过仍然建议认真阅读<a href="https://rasa-nlu.readthedocs.io/en/latest/" target="_blank" rel="noopener">Rasa_NLU官方文档</a>。</p>
+<p>中文Rasa NLU的安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/crownpku/rasa_nlu_chi.git</span><br><span class="line">$ cd rasa_nlu_chi</span><br><span class="line">$ python setup.py install</span><br></pre></td></tr></table></figure>
+<h3 id="语料获取和预处理"><a href="#语料获取和预处理" class="headerlink" title="语料获取和预处理"></a>语料获取和预处理</h3><p>为了增大覆盖面，我们往往需要收集大量的词汇，比如维基百科和百度百科，同时结合自己的应用场景选择特定领域的语料（比如我为了测试加上了百度文库里的中国移动常见问题）。下载并处理中文维基语料的过程参考<a href="http://www.crownpku.com/2017/07/27/%E7%94%A8Rasa_NLU%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%B8%AD%E6%96%87NLU%E7%B3%BB%E7%BB%9F.html" target="_blank" rel="noopener">用Rasa NLU构建自己的中文NLU系统</a>这篇博文。</p>
+<p>在获得并处理好语料以后，中文特色是先进行分词：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 安装jieba分词</span><br><span class="line">$ pip install jieba</span><br><span class="line"># 将一个语料文件分词，以空格为分隔符</span><br><span class="line">$ python -m jieba -d &quot; &quot; ./test &gt; ./test_cut</span><br></pre></td></tr></table></figure>
+<p>把所有分好词的语料文件放在同一个文件路径下，接下来训练MITIE模型。</p>
+<h3 id="训练词表示模型：MITIE的wordprep"><a href="#训练词表示模型：MITIE的wordprep" class="headerlink" title="训练词表示模型：MITIE的wordprep"></a>训练词表示模型：MITIE的wordprep</h3><blockquote>
+<p>经小伙伴提醒：这个MITIE库据说以后不对外支持了，可以采用了spacy库来替代它进行意图识别和实体提取~</p>
+</blockquote>
+<p><a href="https://github.com/mit-nlp/MITIE" target="_blank" rel="noopener">MITIE</a>（MIT Information Extraction）是MIT的 NLP 团队发布的一个信息抽取库和工具。目前包含：</p>
+<ul>
+<li>命名实体抽取（Named-Entity-Recognize，NER）</li>
+<li>二元关系检测功能（Bianry relation detection）</li>
+</ul>
+<p>另外也提供了训练自定义抽取器和关系检测器的工具。它的主要工作在于：</p>
+<ul>
+<li>distributional word embeddings：简单说来就是将每个词映射到向量空间，向量之间的距离代表词之间的相似度，且在语义、语法两种意义上。关于词向量最新的研究可以看<a href="https://einstein.ai/research/learned-in-translation-contextualized-word-vectors?dt_dapp=1" target="_blank" rel="noopener">Learned in translation: contextualized word vectors</a>；</li>
+<li>Structural Support Vector Machines</li>
+</ul>
+<p>尽管 MITIE 是 C++ 写的，但它也提供了其他语言的调用 API 。先编译成动态库再用 Python 调用即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda install libgcc</span><br><span class="line">sudo apt-get install g++</span><br><span class="line">pip install git+https://github.com/mit-nlp/MITIE.git</span><br></pre></td></tr></table></figure>
+<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MITIE\mitielib&gt;mkdir build</span><br><span class="line">MITIE\mitielib&gt;cd build</span><br><span class="line">MITIE\mitielib\build&gt;cmake ..</span><br><span class="line">MITIE\mitielib\build&gt;cmake --build . --config Release --target install</span><br></pre></td></tr></table></figure></p>
+<p>当使用python调用时，如果报错说找不到mitie这个python包，可以手动把mitie的路径加到系统路径中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">parent = os.path.dirname(os.path.realpath(__file__))</span><br><span class="line">sys.path.append(&apos;../../MITIE/mitielib&apos;)</span><br></pre></td></tr></table></figure>
+<p>我们使用<strong>wordprep</strong>工具来<strong>训练所有词向量特征</strong>，后面的<strong>命名实体模型</strong>和<strong>关系模型</strong>都是建立在它的基础上，使用 <code>cmake</code> 构建一下就可直接使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">\MITIE\tools\wordrep&gt;mkdir build</span><br><span class="line">\MITIE\tools\wordrep&gt;cd build</span><br><span class="line">\MITIE\tools\wordrep\build&gt;cmake ..</span><br><span class="line">\MITIE\tools\wordrep\build&gt;cmake --build . --config Release</span><br></pre></td></tr></table></figure>
+<p>之后训练模型得到<code>total_word_feature_extractor.dat</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./wordrep -e /path/to/your/folder_of_cutted_text_files</span><br></pre></td></tr></table></figure>
+<p>这个过程很漫长，也很占内存，建议在服务器上用<code>nohup</code>跑。项目文件中包含我基于中文维基和中国移动常见问题训练好的<code>total_word_feature_extractor.dat</code>。</p>
+<h3 id="训练NLU模型：rasa-nlu-train"><a href="#训练NLU模型：rasa-nlu-train" class="headerlink" title="训练NLU模型：rasa_nlu.train"></a>训练NLU模型：rasa_nlu.train</h3><p>首先需要构建示例，作为意图识别和实体识别的训练数据：<code>mom/data/nlu.json</code>。举个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;text&quot;: &quot;这附近哪里有吃麻辣烫的地方&quot;,</span><br><span class="line">    &quot;intent&quot;: &quot;restaurant_search&quot;,</span><br><span class="line">    &quot;entities&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;start&quot;: 7,</span><br><span class="line">        &quot;end&quot;: 10,</span><br><span class="line">        &quot;value&quot;: &quot;麻辣烫&quot;,</span><br><span class="line">        &quot;entity&quot;: &quot;food&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>text</code>（required）：待处理的句子示例。</li>
+<li><code>intent</code>（optional）：这个句子应该关联的意图。</li>
+<li><code>entities</code>（optional） ：<code>start</code>和<code>end</code>共同定义实体范围，在上面的例子中， <code>&quot;text&quot;: &quot;这附近哪里有吃麻辣烫的地方&quot;</code>, 那么 <code>text[7:10] == &#39;麻辣烫&#39;</code>。实体还可以扩展到<strong>多个词</strong>, 而且<code>value</code>不一定要是你句子中的词，这样一来，就能<strong>将同义词、误拼映射到同一个值上</strong>，比如下面这个例子：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;text&quot;: &quot;in the center of NYC&quot;,</span><br><span class="line">    &quot;intent&quot;: &quot;search&quot;,</span><br><span class="line">    &quot;entities&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;start&quot;: 17,</span><br><span class="line">        &quot;end&quot;: 20,</span><br><span class="line">        &quot;value&quot;: &quot;New York City&quot;,</span><br><span class="line">        &quot;entity&quot;: &quot;city&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;text&quot;: &quot;in the centre of New York City&quot;,</span><br><span class="line">    &quot;intent&quot;: &quot;search&quot;,</span><br><span class="line">    &quot;entities&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;start&quot;: 17,</span><br><span class="line">        &quot;end&quot;: 30,</span><br><span class="line">        &quot;value&quot;: &quot;New York City&quot;,</span><br><span class="line">        &quot;entity&quot;: &quot;city&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>如果嫌手动输入太麻烦，可以使用 <a href="https://github.com/RasaHQ/rasa-nlu-trainer" target="_blank" rel="noopener">rasa-nlu-trainer</a>进行可视化编辑：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm i -g rasa-nlu-trainer</span><br><span class="line">$ rasa-nlu-trainer -s 示例文件路径</span><br></pre></td></tr></table></figure>
+<p>此外，rasa也支持markdown格式的训练语料，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">## intent:greeting</span><br><span class="line">- hey</span><br><span class="line">- hello</span><br><span class="line">- moin</span><br><span class="line"></span><br><span class="line">## intent:goodbye</span><br><span class="line">- bye</span><br><span class="line">- goodbye</span><br><span class="line">- see you later</span><br><span class="line"></span><br><span class="line">## intent:mood_affirm</span><br><span class="line">- yes</span><br><span class="line">- indeed</span><br><span class="line">- correct</span><br><span class="line"></span><br><span class="line">## intent:mood_deny</span><br><span class="line">- no</span><br><span class="line">- never</span><br><span class="line">- no way</span><br><span class="line"></span><br><span class="line">## intent:mood_great</span><br><span class="line">- wonderful</span><br><span class="line">- I am amazing</span><br><span class="line">- I am going to save the world</span><br><span class="line"></span><br><span class="line">## intent:mood_unhappy</span><br><span class="line">- my day was horrible</span><br><span class="line">- I am sad</span><br></pre></td></tr></table></figure>
+<p>有了示例数据，我们还需要<code>mom/nlu_model_config.json</code>来配置流水线（pipeline）。这里考虑中文支持，配置的Rasa NLU的工作流水线如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># MITIE+Jieba+sklearn:</span><br><span class="line">[“nlp_mitie”, “tokenizer_jieba”, “ner_mitie”, “ner_synonyms”, “intent_featurizer_mitie”, “intent_classifier_sklearn”]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>nlp_mitie</code>：初始化<a href="https://github.com/mit-nlp/MITIE" target="_blank" rel="noopener">MITIE</a>，所有mitie组件都依赖于它；</li>
+<li><code>tokenizer_jieba</code>：用jieba来做分词；</li>
+<li><code>ner_mitie</code>：<a href="https://github.com/mit-nlp/MITIE" target="_blank" rel="noopener">MITIE</a>的命名实体识别；</li>
+<li><code>ner_synonyms</code>：如果在示例中通过<code>value</code>属性定义了同义词，就将这些value映射到相同value上</li>
+<li><code>intent_featurizer_mitie</code>：提取意图的特征，作为意图分类器<code>intent_classifier_sklearn</code>的输入；</li>
+<li><code>intent_classifier_sklearn</code>：使用sklearn做意图分类。</li>
+</ul>
+<p>更多pipeline内容详见<a href="https://rasa-nlu.readthedocs.io/en/latest/pipeline.html" target="_blank" rel="noopener">官方文档pipeline介绍</a>。<br>根据config训练NLU模型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python -m rasa_nlu.train -c mom/nlu_model_config.json</span><br></pre></td></tr></table></figure>
+<p>更方便的做法是python调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># train_nlu.py ：train NLU model</span><br><span class="line"></span><br><span class="line">from rasa_nlu.converters import load_data</span><br><span class="line">from rasa_nlu.config import RasaNLUConfig</span><br><span class="line">from rasa_nlu.model import Trainer</span><br><span class="line"></span><br><span class="line"># 训练模型</span><br><span class="line">def train():</span><br><span class="line">    # 示例数据</span><br><span class="line">    training_data = load_data(&apos;data/examples/rasa/demo-rasa_zh.json&apos;)</span><br><span class="line">    # pipeline配置</span><br><span class="line">    trainer = Trainer(RasaNLUConfig(&quot;sample_configs/config_jieba_mitie_sklearn.json&quot;))</span><br><span class="line">    trainer.train(training_data)</span><br><span class="line">    model_directory = trainer.persist(&apos;./projects/default/&apos;)  # 返回nlu模型的储存位置；如果config文件中没有project_name，模型会存储在默认的 /models/default 文件夹下</span><br><span class="line"></span><br><span class="line"># 识别意图</span><br><span class="line">def predict(model_directory):</span><br><span class="line">    from rasa_nlu.model import Metadata, Interpreter</span><br><span class="line">    # 用nlu模型初始化interpreter； `model_directory`为nlu模型位置</span><br><span class="line">    interpreter = Interpreter.load(model_directory, RasaNLUConfig(&quot;sample_configs/config_jieba_mitie_sklearn.json&quot;))</span><br><span class="line">    # 使用加载的interpreter处理文本</span><br><span class="line">    print (interpreter.parse(u&quot;我想吃麻辣烫&quot;))</span><br></pre></td></tr></table></figure>
+<p><code>train</code>完成后就会得到一个类似<code>model_20171013-153447</code>的文件存在 <code>/models/your_project_name</code> 文件夹里。项目文件中提供训练好的NLU模型：<code>/rasa_nlu_chi/models/rasa_nlu_test/model_20171013-153447</code>。使用的话注意改一下model目录下<code>metadata.json</code>的<code>mitie_file</code>路径。</p>
+<p>测试效果除了使用python来<code>predict(model_directory)</code>，还可以启动rasa_nlu的HTTP服务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">$ curl -XPOST localhost:5000/parse -d &apos;&#123;&quot;q&quot;:&quot;我发烧了该吃什么药？&quot;, &quot;project&quot;: &quot;rasa_nlu_test&quot;, &quot;model&quot;: &quot;model_20170921-170911&quot;&#125;&apos; | python -mjson.tool</span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100   652    0   552  100   100    157     28  0:00:03  0:00:03 --:--:--   157</span><br><span class="line">&#123;</span><br><span class="line">    &quot;entities&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;end&quot;: 3,</span><br><span class="line">            &quot;entity&quot;: &quot;disease&quot;,</span><br><span class="line">            &quot;extractor&quot;: &quot;ner_mitie&quot;,</span><br><span class="line">            &quot;start&quot;: 1,</span><br><span class="line">            &quot;value&quot;: &quot;发烧&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;intent&quot;: &#123;</span><br><span class="line">        &quot;confidence&quot;: 0.5397186422631861,</span><br><span class="line">        &quot;name&quot;: &quot;medical&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;intent_ranking&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;confidence&quot;: 0.5397186422631861,</span><br><span class="line">            &quot;name&quot;: &quot;medical&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;confidence&quot;: 0.16206323981749196,</span><br><span class="line">            &quot;name&quot;: &quot;restaurant_search&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;confidence&quot;: 0.1212448457737397,</span><br><span class="line">            &quot;name&quot;: &quot;affirm&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;confidence&quot;: 0.10333600028547868,</span><br><span class="line">            &quot;name&quot;: &quot;goodbye&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;confidence&quot;: 0.07363727186010374,</span><br><span class="line">            &quot;name&quot;: &quot;greet&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;text&quot;: &quot;我发烧了该吃什么药？&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上返回的内容结合了流水线中各个组件的结果，我们可以根据自己的需求设计流水线以及利用返回结果。</p>
+<p>现在回到我们的chatbot目录，来讲剩下的dialogue部分的<code>domain.yml</code>和<code>stories.md</code> ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mom/</span><br><span class="line">├── data/</span><br><span class="line">│   ├── stories.md            # dialogue training data</span><br><span class="line">│   └── nlu.md                # nlu training data</span><br><span class="line">├── domain.yml                # dialogue configuration</span><br><span class="line">└── nlu_model_config.json     # nlu configuration</span><br></pre></td></tr></table></figure>
+<h2 id="对话管理：Rasa-Core"><a href="#对话管理：Rasa-Core" class="headerlink" title="对话管理：Rasa Core"></a>对话管理：Rasa Core</h2><p><a href="https://github.com/RasaHQ/rasa_core" target="_blank" rel="noopener">Rasa Core</a>是一个用来搭建对话系统的框架，具体可查看<a href="https://core.rasa.ai/index.html" target="_blank" rel="noopener">Rasa Core官方文档</a>（似乎要科学上网才能访问）。它的具体工作流程如下：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/valk10twf1intzykw525yvao/rasa_arch_colour.png" alt="rasa_arch_colour.png-29.6kB"></p>
+<ol>
+<li>外面来的信息首先经由interpreter转成text、intent、entities</li>
+<li>tracker负责记录对话状态，接收interpreter的结果</li>
+<li>policy收到当前状态信息</li>
+<li>policy选择下一步action</li>
+<li>所选择的action被tracker记录</li>
+<li>输出回复</li>
+</ol>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/RasaHQ/rasa_core.git</span><br><span class="line">cd rasa_core</span><br><span class="line">pip install -r requirements.txt</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+<p>推荐国内用户从国内镜像（比如豆瓣 PYPI 镜像源<code>https://pypi.doubanio.com/simple/</code>）下载安装，否则<code>pip install -r requirements.txt</code>可能会各种连接失败。</p>
+<blockquote>
+<p><a href="http://blog.csdn.net/u012436149/article/details/66974668" target="_blank" rel="noopener">更改pip源</a>速度快了好多~</p>
+</blockquote>
+<p>运行helloworld示例来检验是否正常安装成功：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">python</span> <span class="string">examples/hello_world/run.py</span></span><br><span class="line"><span class="string">Bot</span> <span class="string">loaded.</span> <span class="string">Type</span> <span class="string">hello</span> <span class="string">and</span> <span class="string">press</span> <span class="string">enter</span> <span class="string">:</span></span><br><span class="line"><span class="string">hello</span></span><br><span class="line"><span class="string">hey</span> <span class="string">there!</span></span><br></pre></td></tr></table></figure>
+<h3 id="定义意图和动作：domain-yml"><a href="#定义意图和动作：domain-yml" class="headerlink" title="定义意图和动作：domain.yml"></a>定义意图和动作：domain.yml</h3><p>Rasa基于<code>intents</code>、<code>entities</code>和当前对话的内部状态，从<code>actions</code>中选择下一步采取的行动。比如机器人选择<code>utter_greet</code>的话，就会从<code>templates</code>中找出相应的句子作为回复（可以填充变量）。而这些都需要我们在domain.yml中预先定义好。</p>
+<blockquote>
+<p><code>ActionListen</code>是一个特殊的action，意味着等待用户，直到说别的内容。当然你还可以定义你自己的action，作为python类来调用。</p>
+</blockquote>
+<p>举个例子：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#创建文件common_domain.yml，复制如下代码</span></span><br><span class="line"><span class="attr">intents:</span><span class="comment">#定义意图</span></span><br><span class="line"><span class="bullet"> -</span> <span class="string">greet</span></span><br><span class="line"><span class="bullet"> -</span> <span class="string">goodbye</span></span><br><span class="line"><span class="bullet"> -</span> <span class="string">chat</span></span><br><span class="line"></span><br><span class="line"><span class="attr">entities:</span></span><br><span class="line"><span class="bullet"> -</span> <span class="string">action</span></span><br><span class="line"></span><br><span class="line"><span class="attr">templates:</span><span class="comment">#表示对于相应的意图采取什么样的回复</span></span><br><span class="line"><span class="attr">  utter_greet:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">"hello!"</span></span><br><span class="line"><span class="attr">  utter_goodbye:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">"byebye :("</span></span><br><span class="line"><span class="attr">  utter_chat:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">"It seems like funny!"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">actions:</span><span class="comment">#定义bot可以采取的动作</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">utter_greet</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">utter_goodbye</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">utter_chat</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>intents</code>：NLU模型识别的意图；</li>
+<li><code>entities</code>：NLU模型识别的实体；</li>
+<li><code>actions</code>：机器人说和做的内容，比如问候对方、调用某个API、查询数据库等；</li>
+<li><code>slots</code>：用来跟踪上下文和多轮对话的关键信息，具体参考<a href="https://core.rasa.ai/domains.html#slot-types" target="_blank" rel="noopener">slot types</a>；</li>
+<li><code>templates</code>：说话模板。</li>
+</ul>
+<h3 id="定义解释器（interpreter）："><a href="#定义解释器（interpreter）：" class="headerlink" title="定义解释器（interpreter）："></a>定义解释器（interpreter）：</h3><p>interpreter用来处理消息，包括执行NLU和把消息转为格式化信息。其实就是上一个part所讲的训练NLU model的过程。这里假定我们已经有了NLU model。</p>
+<h3 id="训练你的对话模型"><a href="#训练你的对话模型" class="headerlink" title="训练你的对话模型"></a>训练你的对话模型</h3><p>我们通过<code>domain.yml</code>定义好了<code>action</code>、教会了小宝宝牙牙学语（各种模板），还要告诉ta什么时候说什么话（基于会话历史训练概率模型，来预测需要采取的<code>action</code>）。有两种”教学方法”（训练方式）：</p>
+<ol>
+<li>念故事书：如果你有标记好的对话数据，可以直接做有监督学习（<strong>supervised learning</strong>）；</li>
+<li>面对面聊天：：但大多数人没有监督学习条件，此时推荐从无到有的交互式学习（<a href="https://core.rasa.ai/tutorial_interactive_learning.html#tutorial-interactive-learning" target="_blank" rel="noopener">interactive learning</a>）。在交互学习模式下，你的chatbot每做出一个决策，你都要即时给出反馈，这有点强化学习的意思，但强化学习是在对话结束后给反馈。</li>
+</ol>
+<p>第二种交互式学习中，当你的chatbot答错时，你需要示范给它正确答案，此时模型会立即自我更新，这样就很难“重蹈覆辙”了。当你结束交互训练时，对话数据会被记录并添加到你的训练数据中。这里主要介绍第一种，我们将故事写在<code>stories.md</code>中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">## happy path               &lt;!-- 故事名 - just for debugging --&gt;</span><br><span class="line">* _greet</span><br><span class="line">  - utter_greet</span><br><span class="line">* _mood_great               &lt;!-- user utterance, in format _intent[entities] --&gt;</span><br><span class="line">  - utter_happy</span><br><span class="line"></span><br><span class="line">## sad path 1               &lt;!-- this is already the start of the next story --&gt;</span><br><span class="line">* _greet</span><br><span class="line">  - utter_greet             &lt;!-- action of the bot to execute --&gt;</span><br><span class="line">* _mood_unhappy</span><br><span class="line">  - utter_cheer_up</span><br><span class="line">  - utter_did_that_help</span><br><span class="line">* _mood_affirm</span><br><span class="line">  - utter_happy</span><br><span class="line"></span><br><span class="line">## sad path 2</span><br><span class="line">* _greet</span><br><span class="line">  - utter_greet</span><br><span class="line">* _mood_unhappy</span><br><span class="line">  - utter_cheer_up</span><br><span class="line">  - utter_did_that_help</span><br><span class="line">* _mood_deny</span><br><span class="line">  - utter_goodbye</span><br><span class="line"></span><br><span class="line">## say goodbye</span><br><span class="line">* _goodbye</span><br><span class="line">  - utter_goodbye</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Wizard-of-Oz（WOz）：自己（wizard）扮演chatbot，wizard能通过搜索接口访问数据库，接收用户的输入并决定下一步说什么。WOz收集到的对话数据可用于对话系统各个组件的研究，从NLU到NLG，或者不同领域端到端的对话系统，从而降低为每个领域人工设计新系统的成本。</p>
+</blockquote>
+<p>关于故事格式可以参考<a href="https://core.rasa.ai/stories.html#stories" target="_blank" rel="noopener">官方文档的stories部分</a>。</p>
+<p>使用Python API<code>Agent</code>我们可以方便地训练、加载、使用模型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># script/train_dm.py</span><br><span class="line"></span><br><span class="line">from rasa_core.agent import Agent</span><br><span class="line">from rasa_core.policies.memoization import MemoizationPolicy</span><br><span class="line"></span><br><span class="line"># 训练policy模型</span><br><span class="line">def train_mom_dm():</span><br><span class="line">    agent = Agent(&quot;../mom/domain.yml&quot;,</span><br><span class="line">                  policies=[MemoizationPolicy()])</span><br><span class="line"></span><br><span class="line">    agent.train(</span><br><span class="line">            training_data_file,</span><br><span class="line">            max_history=3,</span><br><span class="line">            epochs=100,</span><br><span class="line">            batch_size=50,</span><br><span class="line">            augmentation_factor=50,</span><br><span class="line">            validation_split=0.2</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    agent.persist(model_path)</span><br></pre></td></tr></table></figure>
+<p>看到这里想必你已经非常疲惫了吧，来看个漫画轻松一下：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/3je6ju7ougwawfp9kw7fl93a/IMG_0311.jpg" alt="IMG_0311.jpg-808.3kB"></p>
+<p>这是《Understanding Comics》里解释漫画原理的一页，这里借它来说明训练<br>policy模型的原理，先扫一眼训练模型的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class MomPolicy(KerasPolicy):</span><br><span class="line">    def _build_model(self, num_features, num_actions, max_history_len):</span><br><span class="line">        &quot;&quot;&quot;Build a keras model and return a compiled model.</span><br><span class="line">        :param max_history_len: The maximum number of historical turns used to</span><br><span class="line">                                decide on next action&quot;&quot;&quot;</span><br><span class="line">        from keras.layers import LSTM, Activation, Masking, Dense</span><br><span class="line">        from keras.models import Sequential</span><br><span class="line"></span><br><span class="line">        n_hidden = 32  # size of hidden layer in LSTM</span><br><span class="line">        # Build Model</span><br><span class="line">        batch_shape = (None, max_history_len, num_features)</span><br><span class="line"></span><br><span class="line">        model = Sequential()</span><br><span class="line">        model.add(Masking(-1, batch_input_shape=batch_shape))</span><br><span class="line">        model.add(LSTM(n_hidden, batch_input_shape=batch_shape))</span><br><span class="line">        model.add(Dense(input_dim=n_hidden, output_dim=num_actions))</span><br><span class="line">        model.add(Activation(&apos;softmax&apos;))</span><br><span class="line"></span><br><span class="line">        model.compile(loss=&apos;categorical_crossentropy&apos;,</span><br><span class="line">                      optimizer=&apos;adam&apos;,</span><br><span class="line">                      metrics=[&apos;accuracy&apos;])</span><br><span class="line"></span><br><span class="line">        logger.debug(model.summary())</span><br><span class="line">        return model</span><br></pre></td></tr></table></figure>
+<p>这里的<strong>LSTM</strong>其实就是处理漫画这样的sequence数据的关键道具，想象一下，我们的对话模型每句话说完就是一帧图像（当前对话状态），这样一帧一帧输入到LSTM中就是对每个时刻的对话状态进行学习，最终的目标是训练出policy，这样下次再看到“睁眼”，就能猜到下一秒应该是“闭眼”了。</p>
+<p>现在我们有了NLU模型和policy模型，只需要再加上微信接口，即<code>输入</code>和<code>返回用户</code>的过程。</p>
+<h2 id="微信后台"><a href="#微信后台" class="headerlink" title="微信后台"></a>微信后台</h2><h3 id="python操作微信号：wxpy"><a href="#python操作微信号：wxpy" class="headerlink" title="python操作微信号：wxpy"></a>python操作微信号：wxpy</h3><p><a href="https://github.com/youfou/wxpy" target="_blank" rel="noopener">wxpy</a>可用来实现各种微信个人号的自动化操作。具体的使用参见<a href="http://wxpy.readthedocs.io/zh/latest/index.html" target="_blank" rel="noopener">wxpy文档</a>，应用实例可参考<a href="https://github.com/locoda/connector-wechat-bot" target="_blank" rel="noopener">connector-wechat-bot</a>。这里其实只用了收发消息的接口，“智能”的部分交由后文的Rasa_Core完成。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from wxpy import *</span><br><span class="line"># 初始化机器人，扫码登陆</span><br><span class="line">bot = Bot(console_qr=True, cache_path=True)</span><br></pre></td></tr></table></figure>
+<p>由于代码部署在服务器上，不能通过终端打开图片，参数<code>console_qr=True</code>表示在终端内显示二维码；<code>cache_path=True</code>启用缓存，来保存自己的登录状态。</p>
+<p>自己加自己好友方便以后做测试：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 在 Web 微信中把自己加为好友</span><br><span class="line">bot.self.add()</span><br><span class="line">bot.self.accept()</span><br><span class="line"></span><br><span class="line"># 发送消息给自己</span><br><span class="line">bot.self.send(&apos;能收到吗？&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>wxpy提供了注册消息的方法，可以将各种类型的消息注册并自定义处理方式。我们就是利用它来监听任何发送给自己的消息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from rasa_core.agent import Agent</span><br><span class="line">from rasa_core.interpreter import RasaNLUInterpreter</span><br><span class="line"></span><br><span class="line">@bot.register(bot.self, except_self=False)</span><br><span class="line">def reply_self(msg):</span><br><span class="line">    ans = agent.handle_message(msg.text)</span><br><span class="line">    # 自己训练好的NLU模型路径</span><br><span class="line">    nlu_model_path = &apos;/home/luoling/rasa_nlu_chi/models/rasa_nlu_test/model_20171013-153447&apos;</span><br><span class="line">    # agent = 自己训练好的policy模型 + NLU模型作为interpreter</span><br><span class="line">    agent = Agent.load(&quot;../babi/models/policy/current&quot;, interpreter=RasaNLUInterpreter(nlu_model_path))</span><br></pre></td></tr></table></figure>
+<p>重头戏分别是负责语言理解的<code>nlu_model</code>和负责对话管理的<code>agent</code>，将在下面两部分展开介绍。</p>
+<p>最后别忘了让程序保持运行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 进入 Python 命令行、让程序保持运行</span><br><span class="line">embed()</span><br></pre></td></tr></table></figure></p>
+<h3 id="python搭建微信公众号后台"><a href="#python搭建微信公众号后台" class="headerlink" title="python搭建微信公众号后台"></a>python搭建微信公众号后台</h3><blockquote>
+<p>目前还在测试阶段，大部分时间无法正常使用，抱歉~</p>
+</blockquote>
+<p>我参考<a href="http://blog.gusibi.com/post/wechat-chatbot-step-by-step/" target="_blank" rel="noopener">微信公众号搭chatbot</a>加上了公众号的支持，使用的原材料如下：</p>
+<ul>
+<li>内存足够（tensorflow跑起来占400M左右）的VPS（我选的bandwagon 20G那个，一年$49.9，有更便宜的请务必告诉我）</li>
+<li>微信订阅号</li>
+</ul>
+<p>最后的效果欢迎关注公众号测试：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/fbnay1uihmjwxpb0sy76nthe/qrcode_for_gh_b9b48c1d57b2_430.jpg" alt="qrcode_for_gh_b9b48c1d57b2_430.jpg-38.4kB"></p>
+<h3 id="整体来看"><a href="#整体来看" class="headerlink" title="整体来看"></a>整体来看</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> absolute_import</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> division</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> unicode_literals</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> rasa_core <span class="keyword">import</span> utils</span><br><span class="line"><span class="keyword">from</span> rasa_core.actions.action <span class="keyword">import</span> ACTION_LISTEN_NAME</span><br><span class="line"><span class="keyword">from</span> rasa_core.agent <span class="keyword">import</span> Agent</span><br><span class="line"><span class="keyword">from</span> rasa_core.channels.console <span class="keyword">import</span> ConsoleInputChannel</span><br><span class="line"><span class="keyword">from</span> rasa_core.domain <span class="keyword">import</span> TemplateDomain</span><br><span class="line"><span class="keyword">from</span> rasa_core.interpreter <span class="keyword">import</span> NaturalLanguageInterpreter</span><br><span class="line"><span class="keyword">from</span> rasa_core.policies <span class="keyword">import</span> Policy</span><br><span class="line"><span class="keyword">from</span> rasa_core.tracker_store <span class="keyword">import</span> InMemoryTrackerStore</span><br><span class="line"></span><br><span class="line">logger = logging.getLogger(__name__)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CommonPolicy</span><span class="params">(Policy)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict_action_probabilities</span><span class="params">(self, tracker, domain)</span>:</span></span><br><span class="line">        <span class="comment"># type: (DialogueStateTracker, Domain) -&gt; List[float]</span></span><br><span class="line">    <span class="comment">#将对应的意图与动作绑定</span></span><br><span class="line">        responses = &#123;</span><br><span class="line">            <span class="string">"greet"</span>: <span class="number">2</span>,</span><br><span class="line">            <span class="string">"goodbye"</span>: <span class="number">3</span>,</span><br><span class="line">            <span class="string">"chat"</span>: <span class="number">4</span>,</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> tracker.latest_action_name == ACTION_LISTEN_NAME:</span><br><span class="line">            key = tracker.latest_message.intent[<span class="string">"name"</span>]</span><br><span class="line">            action = responses[key] <span class="keyword">if</span> key <span class="keyword">in</span> responses <span class="keyword">else</span> <span class="number">4</span></span><br><span class="line">            <span class="keyword">return</span> utils.one_hot(action, domain.num_actions)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> np.zeros(domain.num_actions)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloInterpreter</span><span class="params">(NaturalLanguageInterpreter)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, message)</span>:</span></span><br><span class="line">        <span class="comment"># intent = "greet" if 'hello' in message else "default"</span></span><br><span class="line">        <span class="keyword">global</span> intent</span><br><span class="line">    <span class="comment">#进行意图识别</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">'hello'</span> <span class="keyword">in</span> message:</span><br><span class="line">            intent=<span class="string">'greet'</span></span><br><span class="line">        <span class="keyword">elif</span> <span class="string">'goodbye'</span> <span class="keyword">in</span> message:</span><br><span class="line">            intent=<span class="string">'goodbye'</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            intent=<span class="string">'chat'</span></span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="string">"text"</span>: message,</span><br><span class="line">            <span class="string">"intent"</span>: &#123;<span class="string">"name"</span>: intent, <span class="string">"confidence"</span>: <span class="number">1.0</span>&#125;,</span><br><span class="line">            <span class="string">"entities"</span>: []</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_hello_world</span><span class="params">(serve_forever=True)</span>:</span></span><br><span class="line">    default_domain = TemplateDomain.load(<span class="string">"./common_domain.yml"</span>)<span class="comment">#加载多个domain怎么办</span></span><br><span class="line">    agent = Agent(default_domain,</span><br><span class="line">                  policies=[CommonPolicy()],</span><br><span class="line">                  interpreter=HelloInterpreter(),</span><br><span class="line">                  tracker_store=InMemoryTrackerStore(default_domain))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> serve_forever:</span><br><span class="line">        <span class="comment"># Attach the commandline input to the controller to handle all</span></span><br><span class="line">        <span class="comment"># incoming messages from that channel</span></span><br><span class="line">        agent.handle_channel(ConsoleInputChannel())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> agent</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    run_hello_world()</span><br></pre></td></tr></table></figure>
+<h1 id="Todo-List"><a href="#Todo-List" class="headerlink" title="Todo List"></a>Todo List</h1><h2 id="Future-Work"><a href="#Future-Work" class="headerlink" title="Future Work"></a>Future Work</h2><p>rasa扩展</p>
+<ul>
+<li>目前对中文entity的处理还有问题（认“salad”但不认“麻辣烫”）</li>
+<li>实现微信上的交互式训练，包括向提问人学习如何提问（能主动发起会话）；</li>
+<li>如果能导出微信聊天数据的话就有很多dialogue了。读取历史聊天信息作为训练数据，充分发挥聊天app的优势，难点在于非结构数据的结构化；</li>
+<li>增量式学习，在增加新语料时不用从头再来；</li>
+<li>基于google搜索结果和QA模型做chatbot的百事通功能。</li>
+</ul>
+<p>微信扩展：</p>
+<ul>
+<li>表情包推荐功能<ul>
+<li><a href="http://affect.media.mit.edu/pdfs/16.Chen-etal-ISM-full.pdf" target="_blank" rel="noopener">预测gif情感</a></li>
+</ul>
+</li>
+<li>结合语音判断情绪，作为辅助信息</li>
+<li>个奇怪的问题：机器不会主动来”关心”你，这套体系更偏向商业应用，即解决用户的问题</li>
+<li>NLG：自然语言生成</li>
+<li>intent定义：现在还是很生硬的人工编辑，有没有可能自动地从对话中去提炼intent和action</li>
+<li>目前的conversation representation是binary vector，是否能在语义空间做改进？类似encoder decoder那种</li>
+<li>对抗式训练，做两个chatbot相互交流，不过得有一个objective function。忍不住想到一个世纪难题：把一个健身房教练和理发店造型师放一间房里，到底谁会先让谁办卡……</li>
+</ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
+<li><a href="https://medium.com/rasa-blog/a-new-approach-to-conversational-software-2e64a5d05f2a" target="_blank" rel="noopener">浅谈垂直领域的chatbot</a></li>
+<li>Rasa Blog: <a href="https://medium.com/rasa-blog/a-new-approach-to-conversational-software-2e64a5d05f2a" target="_blank" rel="noopener">A New Approach to Conversational Software</a></li>
+</ol>
+<h1 id="补充：QA系统"><a href="#补充：QA系统" class="headerlink" title="补充：QA系统"></a>补充：QA系统</h1><p>QA（Question Answering）即问答系统，目前研究集中在自然语言问答和视觉问答，分别基于给定的文字和图像回答特定问题。在Chatbot（聊天机器人）和智能客服中应用广泛。</p>
+<p>技术特点在于对问题（Question）和给定内容（Context）进行编码（encode），并从中解码（decode）出答案，事实上，相似模型也可应用在基于样例的语音关键词检测（Query-by-Example Spoken Term Detection）中，即对搜索内容（Query）和搜索对象（Context）进行编码，从中解码出关关键词（Query）出现与否以及关键词的出现位置。</p>
+<p><img src="http://static.zybuluo.com/sixijinling/d59c719oihk9ljiz53gpprle/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-11-26%2014.02.43.png" alt="屏幕快照 2017-11-26 14.02.43.png-405.2kB"></p>
+<h1 id="Reference-1"><a href="#Reference-1" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li><a href="https://tryolabs.com/blog/2017/01/25/building-a-chatbot-analysis--limitations-of-modern-platforms/" target="_blank" rel="noopener">Building a Chatbot: analysis &amp; limitations of modern platforms</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="随缘集 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="随缘集 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/chatbot/" rel="tag"># chatbot</a>
+          
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/31/art-2017-10-31-fan/" rel="next" title="何事秋风空画扇">
+                <i class="fa fa-chevron-left"></i> 何事秋风空画扇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/31/write-2018-1-1-Bye-2017/" rel="prev" title="再见啦 2017">
+                再见啦 2017 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80Mjc5MS8xOTMzOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">随缘集</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/frcmail" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:frcmail@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友链
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.guancha.cn/" title="观察者网" target="_blank">观察者网</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#重要资料"><span class="nav-number">1.</span> <span class="nav-text">重要资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#研究背景"><span class="nav-number">2.</span> <span class="nav-text">研究背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步入正题"><span class="nav-number">3.</span> <span class="nav-text">步入正题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#自然语言理解：Rasa-NLU"><span class="nav-number">3.1.</span> <span class="nav-text">自然语言理解：Rasa NLU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#语料获取和预处理"><span class="nav-number">3.1.1.</span> <span class="nav-text">语料获取和预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#训练词表示模型：MITIE的wordprep"><span class="nav-number">3.1.2.</span> <span class="nav-text">训练词表示模型：MITIE的wordprep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#训练NLU模型：rasa-nlu-train"><span class="nav-number">3.1.3.</span> <span class="nav-text">训练NLU模型：rasa_nlu.train</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对话管理：Rasa-Core"><span class="nav-number">3.2.</span> <span class="nav-text">对话管理：Rasa Core</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">3.2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义意图和动作：domain-yml"><span class="nav-number">3.2.2.</span> <span class="nav-text">定义意图和动作：domain.yml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义解释器（interpreter）："><span class="nav-number">3.2.3.</span> <span class="nav-text">定义解释器（interpreter）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#训练你的对话模型"><span class="nav-number">3.2.4.</span> <span class="nav-text">训练你的对话模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信后台"><span class="nav-number">3.3.</span> <span class="nav-text">微信后台</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python操作微信号：wxpy"><span class="nav-number">3.3.1.</span> <span class="nav-text">python操作微信号：wxpy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python搭建微信公众号后台"><span class="nav-number">3.3.2.</span> <span class="nav-text">python搭建微信公众号后台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#整体来看"><span class="nav-number">3.3.3.</span> <span class="nav-text">整体来看</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Todo-List"><span class="nav-number">4.</span> <span class="nav-text">Todo List</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Future-Work"><span class="nav-number">4.1.</span> <span class="nav-text">Future Work</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#补充：QA系统"><span class="nav-number">6.</span> <span class="nav-text">补充：QA系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference-1"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">随缘集</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

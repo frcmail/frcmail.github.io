@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="CNN,图像分割,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="人工识别像划重点一样，真的很枯燥很累啊">
+<meta name="keywords" content="CNN,图像分割">
+<meta property="og:type" content="article">
+<meta property="og:title" content="裂缝识别">
+<meta property="og:url" content="http://yoursite.com/2015/10/18/tech-2016-10-18-RoadNN/index.html">
+<meta property="og:site_name" content="剑来小站">
+<meta property="og:description" content="人工识别像划重点一样，真的很枯燥很累啊">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/torrvision/crfasrnn/raw/master/sample.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/oo489jzvkk9odwbk4vz9djr1/convolution.png">
+<meta property="og:image" content="http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/RNN-unrolled.png">
+<meta property="og:image" content="http://img.blog.csdn.net/20160423111733218">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/vknv3yeser2mbwwrognwjjts/1d3f9cefc0de33cfebe71bbc237ccc6b_b.png">
+<meta property="og:image" content="http://img.my.csdn.net/uploads/201211/03/1351909905_5548.png">
+<meta property="og:image" content="http://img.my.csdn.net/uploads/201209/21/1348218477_3540.png">
+<meta property="og:image" content="http://img.blog.csdn.net/20160824161755284">
+<meta property="og:image" content="http://img.blog.csdn.net/20160824161815758">
+<meta property="og:updated_time" content="2019-02-21T10:30:42.922Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="裂缝识别">
+<meta name="twitter:description" content="人工识别像划重点一样，真的很枯燥很累啊">
+<meta name="twitter:image" content="https://github.com/torrvision/crfasrnn/raw/master/sample.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/10/18/tech-2016-10-18-RoadNN/">
+
+
+
+
+
+  <title>裂缝识别 | 剑来小站</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑来小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/10/18/tech-2016-10-18-RoadNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="随缘集">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑来小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">裂缝识别</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-10-18T11:12:00+08:00">
+                2015-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tech/" itemprop="url" rel="index">
+                    <span itemprop="name">tech</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  人工识别像划重点一样，真的很枯燥很累啊
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>公路在使用过程中，总会因为行车、自然因素出现裂缝，这些裂缝如果不及时维护（填沥青）的话，可能会影响到车辆的正常通行。</p>
+<p>可是真是环境总是变化多样的，光照、磨损会带来各种干扰或是消弭调裂缝本身的可见性。于是乎，机器识别达不到的正确率只能靠人力来弥补了。</p>
+<p>但是这种单调、工作量大的活儿还是交给机器来做成本更低嘛。</p>
+<p>所以我们就要用机器学习的思路来做啦～传统的就是基于特征，不管之后学习算法用的是SVM还是BP，第一步总归是人的脑力风暴来决定提取那些特征以及怎样提取。</p>
+<p>可是现在有了深度学习就不一样了，输入的图片还是原原本本的样子，顶多是做一下压缩。</p>
+<p>我们现在实现的模型也就是基于多层的卷积操作和pooling操作（有的地方译作池化）来逐渐“降维”，最终原来image大小的图就被一群方格代表了（我们的输出粒度是方格大小）。</p>
+<p>而我现在又有想要把attention融进来的念头，毕竟卷积在做判断（softmax）的时候还是局部性的考虑，对有裂缝或是没裂缝如果说最后是有这个filter的话，应该说还是固定的，而如果能结合周围的方格状况综合考虑的话，就不算太死板。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>首先将原始图片划分为同等大小的方形区域，对这些block进行识别，可看做是粗粒度的pixel-wise图像标记，目前的标记只有两种：有裂缝、无裂缝。</p>
+<p>在前期试验中，我们仅使用CNN可以很好地提取图片特征进行分类，但是：</p>
+<ul>
+<li>会出现孤立“噪点”————与裂缝特征相近的单个小块被错误识别为裂缝。由于工程应用中对裂缝的定义是连续线条，这些噪点会对最后的结果带来误差。</li>
+<li>此外，有些裂纹会在中间一段不明显，CNN方法不会将这部分识别为裂缝，而工程应用恰恰需要把它们连成一体。</li>
+<li>通过单一的卷积神经网络的方法对病害中的裂缝和条形修补进行识别，在路况良好（无光照阴影，路面清洁，老化不严重）的路上识别的准确率可以达到90%以上，但是对路况普通（存在光照等问题，也存在较好路况）的路面，效果一般，准确率只能达到70%左右。</li>
+</ul>
+<p>因此，我们通过在CNN后增加probability inference模块改进算法：</p>
+<p><strong>Conditional Random Fields(CRF)</strong>用于pixel-wise的图像标记（其实就是图像分割）。把像素的label作为形成马尔科夫场随机变量且能够获得全局观测时，CRF便可以对这些label进行建模。这种全局观测通常就是输入图像。即在判断某一个方格时需要考虑整张图的情况，从而解决“噪点”和连接的问题。</p>
+<p>输入图像：<br>$$<br>x={x_1,\dots,x_P}<br>$$<br>$P$为像素数。</p>
+<p>目标输出：<br>$$<br>y={y_1,\dots,y_B},y_i \in L={l_1,l_2,\dots,l_L}<br>$$<br>因为我们判断的是每一方格<strong>是不是</strong>裂缝。因此这里的标签$L$目前只有两种。$$y_i$$即为第$$i$$个方格的标签。</p>
+<p>主要参考论文：<strong>《Conditional Random Fields as Recurrent Neural Networks》</strong></p>
+<p>Github : <a href="https://github.com/torrvision/crfasrnn" target="_blank" rel="noopener">CRF-RNN for Semantic Image Segmentation</a></p>
+<p><img src="https://github.com/torrvision/crfasrnn/raw/master/sample.png" alt="Semantic Image Segmentation"></p>
+<ul>
+<li>Contribution：这篇论文最重要的工作就是<strong>end-to-end</strong>训练。CNN负责产生unary potential，intuitively上更合理，实验效果也证明有提高。具体通过两方面来实现：<ul>
+<li>mean-field CRF 的RNN实现：将mean-field算法的步骤分解为CNN，这样通过迭代就成了RNN。</li>
+<li>error differential 的反向传递，CRF的error derivative直接传到了CNN。</li>
+</ul>
+</li>
+<li>关键问题：将 label assignment problem 转化为 probability inference problem ，融入对相似像素的<strong>标签一致性</strong>的推断。</li>
+<li>目标：从 coarse 到 fine-grained segmentation ，弥补 CNN 在 pixel-level labeling task 上的不足。</li>
+</ul>
+<h2 id="1-理论部分"><a href="#1-理论部分" class="headerlink" title="1. 理论部分"></a>1. 理论部分</h2><h3 id="Feature-Extraction-CNN"><a href="#Feature-Extraction-CNN" class="headerlink" title="Feature Extraction : CNN"></a><a href="https://rowl1ng.gitbooks.io/machine-learning/content/cnn.html" target="_blank" rel="noopener">Feature Extraction : CNN</a></h3><p><img src="http://static.zybuluo.com/sixijinling/oo489jzvkk9odwbk4vz9djr1/convolution.png" alt="此处输入图片的描述"></p>
+<p>##</p>
+<p>我们的目标输出为总方格数$B$(blocks)的$D$维vectors矩阵，<br>相当于实现：$$img_h \times img_w \Longrightarrow block_h \times block_w \times D$$</p>
+<ul>
+<li>卷积：Conv2D 维数不变</li>
+<li>池化：Maxpooling2D  缩小维数<ul>
+<li><code>pool_size</code></li>
+<li><code>stride</code></li>
+</ul>
+</li>
+</ul>
+<p>执行5次<code>pool_size</code>=2<em>2的池化就相当于$$\frac {输入图片大小}{2^5}$$,这样原来的640</em>928就一步步变成了20*29。<br>相当于32 bits prediction<br>在对原始图像进行“缩放”的同时，我们实际上通过卷积操作提取每一方格内图像的标注向量<strong>annotation  vector</strong>：</p>
+<ul>
+<li>$$B$$个 annotation vector，对应$$B$$个方格</li>
+<li>每个vector都是$$D$$维(dimension)的</li>
+</ul>
+<p>$$<br>a={\mathbf a_1,\dots,\mathbf a_B},\mathbf a_i \in \mathbb R^D<br>$$</p>
+<p>without considering the <strong>smoothness and consistency</strong> of the label assignment.<br>因此需要考虑pairwise data-dependant smoothing term.<br>作为CRF的一元势能量。</p>
+<p>这一阶段要考虑的参数：</p>
+<ul>
+<li>receptive field</li>
+<li>subsampling rate</li>
+</ul>
+<h3 id="关于RNN"><a href="#关于RNN" class="headerlink" title="关于RNN"></a><a href="https://rowl1ng.gitbooks.io/machine-learning/content/rnn.html" target="_blank" rel="noopener">关于RNN</a></h3><p><img src="http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/RNN-unrolled.png" alt="此处输入图片的描述"></p>
+<h3 id="关于CRF-概率图模型"><a href="#关于CRF-概率图模型" class="headerlink" title="关于CRF(概率图模型)"></a>关于CRF(概率图模型)</h3><p>下面来讲 CRF 用于 pixel-wise 的图像标记（其实就是图像分割）。当把像素的label作为形成马尔科夫场的随机变量，且能够获得全局观测时，CRF便可以对这些label进行建模。</p>
+<p><img src="http://img.blog.csdn.net/20160423111733218" alt="CRF"></p>
+<blockquote>
+<p>图中的$$y_i$$为观测，即像素。</p>
+</blockquote>
+<p>定义随机变量$$X_i$$是像素$$i$$的标签。</p>
+<p>$$<br>X_i \in L={l_1,l_2,…,l_L}<br>$$</p>
+<ul>
+<li>$$X$$：由$$X_1,X_2,…,X_N$$组成的随机向量；</li>
+<li>$$N$$就是图像的像素个数。</li>
+</ul>
+<p>假设图$$G=(V,E)$$，其中$$V={X_1,X_2,\dots,X_N}$$，全局观测为（image）$$I$$。$$(I,X)$$即基于Gibbs分布的CRF模型：</p>
+<p>$$<br>P(X=x|I)=\frac 1{Z(I)}exp(-E(x|I))<br>$$</p>
+<p>$$Z(I)$$是所有可能labeling的集合，保证$$P(X=x|I)$$在0~1。</p>
+<p>条件随机场图像分割能量函数的构造：</p>
+<p>$$<br>E(x)=\sum _i \varphi_u(x_i)+\sum _{i&lt;j} \varphi_p(x_i.x_j)<br>$$</p>
+<p>这里的$$E$$可以理解为能量，也就是cost。其中$$\varphi_u(x_i)$$是将像素$$i$$标记为$$x_i$$的inverse likelihood，$$\varphi_p(x_i.x_j)$$是将$$i$$、$$j$$同时标记为$$x_i$$、$$x_j$$的能量。</p>
+<h4 id="Recall-the-HMM"><a href="#Recall-the-HMM" class="headerlink" title="Recall the HMM :"></a>Recall the HMM :</h4><p>在做NLP的Part-of-Speech tagging（adj. n. v. prep. adv.）的时候，下层的是它的观测(word)，上层就是 word对应的词性label。</p>
+<p>$$<br>p(l,s)=p(l_1)\prod_i p(l_i|l_{i-1})p(\omega_i|l_i)<br>$$</p>
+<p>(<strong>transition</strong> probability x <strong>emission</strong> probability)。</p>
+<p>对比一下的话，CRF可以使用更多global features，而HMM只考虑前一个label。比如POS任务里，句子结尾的一个问号增大第一个词标记为动词的概率。或许看下面这张图会领会更多：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/vknv3yeser2mbwwrognwjjts/1d3f9cefc0de33cfebe71bbc237ccc6b_b.png" alt="1d3f9cefc0de33cfebe71bbc237ccc6b_b.png-80.1kB"></p>
+<blockquote>
+<p>关于CRF更详细的内容可参考论文： 《 <a href="http://homepages.inf.ed.ac.uk/csutton/publications/crftut-fnt.pdf" target="_blank" rel="noopener">An introduction to conditional random fields</a> 》</p>
+</blockquote>
+<hr>
+<h2 id="2-网络构建"><a href="#2-网络构建" class="headerlink" title="2. 网络构建"></a>2. 网络构建</h2><ul>
+<li>结构：<ul>
+<li>CNN :<strong>unary</strong> potential：<br>$$<br>\varphi_u(x_i)<br>$$</li>
+<li>CRF : <strong>pairwise</strong> potential as weighted Gaussians.</li>
+</ul>
+</li>
+</ul>
+<p>$$<br>\varphi_p(x_i.x_j)=\mu (x_i,x_j)\sum_{m=1}^M \omega ^{(m)}k_G^{(m)}(\mathbf f_i,\mathbf f_j)<br>$$</p>
+<p>其中</p>
+<p>$$<br>k^{(m)}(\mathbf f_i,\mathbf f_j)=\exp(-\frac 12(\mathbf f_i-\mathbf f_j)^{\mathrm T}\varLambda^{(m)}(\mathbf f_i-\mathbf f_j))<br>$$</p>
+<p>$$\mathbf f_i$$是像素$$i$$的feature vector，这里是从原图片中提取的。<br><strong>Potts Model</strong> ： $$\mu(x_i,x_j)=[x_i \neq x_j]$$ 是对位置接近的相似像素标记不同的惩罚项。</p>
+<ul>
+<li>inference method<ul>
+<li><strong>back propagation</strong> : 论文中使用的是<strong>SGD</strong>来进行反向传播；</li>
+<li><strong>minibatch</strong> ：训练时可以用一整张图，也可以用多张图。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Mean-field-CNN-softmax"><a href="#Mean-field-CNN-softmax" class="headerlink" title="Mean-field = CNN + softmax"></a>Mean-field = CNN + softmax</h3><p>基于平均场，使用更简单的分布$$Q(\mathbf X)$$来逼近CRF的$$P(\mathbf X)$$：</p>
+<p>$$<br>U_i(l)=-\varphi_u(\mathbf X_i=l) \<br>Z_i=\sum_l \exp (U_i(l))<br>$$</p>
+<h4 id="1-首先初始化："><a href="#1-首先初始化：" class="headerlink" title="1. 首先初始化："></a>1. 首先初始化：</h4><p>对每个像素上的所有label做softmax：</p>
+<p>$$<br>Q_i(l) \leftarrow \frac 1{Z_i}\exp (U_i(l)) \<br>$$</p>
+<p>等同于softmax ： $$h_j = \frac{e^{z_j}}{\sum{e^{z_i}}}$$</p>
+<p>由于这里不涉及其他参数，因此梯度在经过softmax的反向计算后直接传给unary potentials。</p>
+<p>$$\frac{\partial h_{j}}{\partial z_{k}} = h_{j}\delta_{kj}-h_{j}h_{k}$$</p>
+<h4 id="2-Message-passing"><a href="#2-Message-passing" class="headerlink" title="2. Message passing:"></a>2. Message passing:</h4><p>对$$Q$$进行$$M$$个高斯滤波：</p>
+<p>$$<br>Q_j(l) \leftarrow \sum_{i \neq j} k^{(m)}(\mathbf f_i,\mathbf f_j)Q_j(l)<br>$$</p>
+<ul>
+<li>Gaussian kernel<ul>
+<li>edge-preserving Gaussian filters</li>
+<li>coefficient直接从像素位置、RGB信息中来，反映和其他像素的关联程度</li>
+</ul>
+</li>
+<li>这里的CRF是potentially fully connected ，每个filter的receptive field都是整张图，强制实现不可行。<ul>
+<li>为了提高高位高斯铝箔的速度，使用的是Andrew Adams et al所提出的<a href="http://blog.csdn.net/xuanwu_yan/article/details/7962508" target="_blank" rel="noopener"><strong>Pemutohedral Lattice</strong></a>，时间复杂度$$O(n)$$。</li>
+</ul>
+</li>
+</ul>
+<p>补充：<br>(1) 如果是<strong>稀疏条件随机场</strong>，那么我们构造图模型的边集合E就是：每对相邻的像素点间可以构造一条边。当然除了4邻域构造边之外，你也可以用8邻域模型。<br>(2) <strong>全连接条件随机场</strong>与稀疏条件随机场的最大差别在于：每个像素点都与所有的像素点相连接构成连接边。这就恐怖了，如果一张图像是$$100 \times 100$$，那么就相当于有10000个像素点，因此如果采用全连接条件随机场的话，那么就会构造出约$$10000 \times 10000$$条边。如果图像大小再大一些，那么就会变得非常恐怖，普通条件随机场推理算法，根本行不通。</p>
+<p><img src="http://img.my.csdn.net/uploads/201211/03/1351909905_5548.png" alt="此处输入图片的描述"></p>
+<p><img src="http://img.my.csdn.net/uploads/201209/21/1348218477_3540.png" alt="此处输入图片的描述"></p>
+<ul>
+<li>分为三个步骤：<ul>
+<li>splat</li>
+<li>blur</li>
+<li>slice</li>
+</ul>
+</li>
+<li><p>误差反向通过filter，逆转blur阶段filter的顺序，时间复杂度$$O(n)$$。</p>
+</li>
+<li><p>2 Guassian Kernel：<a href="http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MANDUCHI1/Bilateral_Filtering.html#The%20Gaussian%20Case" target="_blank" rel="noopener">Bilateral filter</a> 和Spatial filter两种滤波器</p>
+</li>
+</ul>
+<h4 id="3-Weighting-Filter-Outputs"><a href="#3-Weighting-Filter-Outputs" class="headerlink" title="3. Weighting Filter Outputs"></a>3. Weighting Filter Outputs</h4><p>为每个标签计算$$M$$个filter输出的weighted sum ，可以看成是有$$M$$个输入channel、1个输出channel的卷积操作。</p>
+<p>$$<br>Q_i(l) \leftarrow \sum _m \omega ^{(m)}Q_i^{(m)}(l)<br>$$</p>
+<p>考虑到识别对象，这里针对每个标签使用不同的spatial kernel和bilateral kernel权重，作者举的例子是bilateral filter 在识别自行车上很重要（此时颜色的相似性很关键），但识别电视机就不那么重要（电视机有各种颜色）。</p>
+<h4 id="4-Compatibility-Transform"><a href="#4-Compatibility-Transform" class="headerlink" title="4. Compatibility Transform"></a>4. Compatibility Transform</h4><p>$$<br>Q_i(l) \leftarrow \sum _{l’ \in \mathcal L}\mu (l,l’)Q_i(l)<br>$$</p>
+<ul>
+<li>$$\mu (l,l’)$$：两个标签之间的compatibility<ul>
+<li>如果相似像素标签不同就有 penalty。Intuitively,不同的 label pair 有不同的penalty会合理一些。</li>
+</ul>
+</li>
+<li>同样可看作是<strong>卷积</strong>操作，且输入输出都有$$L$$个channel，学习filter的参数就是在学习函数$$\mu(.,.)$$</li>
+</ul>
+<p>至此完成了构造$$\varphi_p(x_i,x_j)$$的任务。</p>
+<h4 id="5-unary-compatibility-transform"><a href="#5-unary-compatibility-transform" class="headerlink" title="5. unary-compatibility transform"></a>5. unary-compatibility transform</h4><p>计算$$E(\mathbf x)$$：</p>
+<p>$$<br>Q_i(l) \leftarrow U_i(l)-Q_i(l)<br>$$</p>
+<ul>
+<li>未引入其他参数，误差直接传递给两个输入，注意符号</li>
+</ul>
+<h4 id="6-Normalization：softmax"><a href="#6-Normalization：softmax" class="headerlink" title="6. Normalization：softmax"></a>6. Normalization：softmax</h4><p>计算$$P(\mathbf X=\mathbf x|\mathbf I)$$：</p>
+<p>$$<br>Q_i(l) \leftarrow \frac 1{Z_i}\exp (Q_i(l))<br>$$</p>
+<ul>
+<li>softmax的反向传播</li>
+</ul>
+<hr>
+<h3 id="Iterable-Mean-field-RNN"><a href="#Iterable-Mean-field-RNN" class="headerlink" title="Iterable Mean-field = RNN"></a>Iterable Mean-field = RNN</h3><ul>
+<li>$$Q_{in}$$：an estimation marginal probability from the previous iteration:</li>
+</ul>
+<p>$$<br>f_{\theta}(U,Q_{in},I) \<br>\theta={\omega^{(m)},\mu(l,l’)},\<br>m\in {1,\dots,M},l,l’ \in {l_1,\dots,l_L}<br>$$</p>
+<p>迭代结构等同于RNN，假设迭代T次：</p>
+<ul>
+<li>t=0,使用softmax（U）来初始化</li>
+<li>t&gt;1,每轮$f_{\theta}$中的$Q_{in}$为上一轮输出</li>
+<li>输出$Y$</li>
+<li>学习算法：BP through time<ul>
+<li>5次迭代即可收敛，再增加可能导致vanishing和exploding gradient problems。<br>: 实现Bilateral filter 的bilateral_lattices_和实现Spatial filter的spatial_lattice</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="3-Caffe上的实现"><a href="#3-Caffe上的实现" class="headerlink" title="3. Caffe上的实现"></a>3. Caffe上的实现</h2><p>Caffe 是由伯克利大学视觉和学习中心开发的一种深度学习框架。在视觉任务和卷积神经网络模型中，Caffe 格外受欢迎且性能优异。</p>
+<p>输入图像：</p>
+<p>$$<br>x={x_1,\dots,x_P}<br>$$<br>$P$为像素数。</p>
+<p>目标输出：</p>
+<p>$$<br>y={y_1,\dots,y_B},y_i \in L={l_1,l_2,\dots,l_L}<br>$$</p>
+<p>因为我们判断的是每一方格<strong>是不是</strong>裂缝。因此这里的标签$L$只有两种。$y_i$即为第$i$个方格的标签。</p>
+<h3 id="自己写Python层作为输入层"><a href="#自己写Python层作为输入层" class="headerlink" title="自己写Python层作为输入层"></a>自己写Python层作为输入层</h3><p>road_layer.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self.x = np.load(os.path.join(CACHE_PATH, &apos;x_&#123;&#125;.npy&apos;.format(self.split)))</span><br><span class="line">self.y = np.load(os.path.join(CACHE_PATH, &apos;y_&#123;&#125;.npy&apos;.format(self.split)))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>setup()是类启动时该做的事情，比如层所需数据的初始化。</li>
+<li>reshape()就是取数据然后把它规范化为四维的矩阵。每次取数据都会调用此函数。</li>
+<li>forward()就是网络的前向运行，这里就是把取到的数据往前传递，因为没有其他运算。<ul>
+<li>assign output</li>
+<li>pick next input</li>
+</ul>
+</li>
+<li>backward()就是网络的反馈，data层是没有反馈的，所以这里就直接pass。</li>
+</ul>
+<h3 id="生成训练网络"><a href="#生成训练网络" class="headerlink" title="生成训练网络"></a>生成训练网络</h3><p>net.py生成网络结构文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">n.data, n.label = L.Python(module=&apos;road_layer&apos;, layer=&apos;ROADSegDataLayer&apos;,</span><br><span class="line">        ntop=2, param_str=str(pydata_params))</span><br><span class="line"></span><br><span class="line"># the base net</span><br><span class="line">n.conv1_1, n.relu1_1 = conv_relu(n.data, 32, ks=5)</span><br><span class="line">n.conv1_2, n.relu1_2 = conv_relu(n.relu1_1, 32, ks=5)</span><br><span class="line">n.pool1 = max_pool(n.relu1_2)</span><br><span class="line"></span><br><span class="line">n.conv2_1, n.relu2_1 = conv_relu(n.pool1, 64)</span><br><span class="line">n.conv2_2, n.relu2_2 = conv_relu(n.relu2_1, 64)</span><br><span class="line">n.pool2 = max_pool(n.relu2_2)</span><br><span class="line"></span><br><span class="line">n.conv3_1, n.relu3_1 = conv_relu(n.pool2, 128)</span><br><span class="line">n.conv3_2, n.relu3_2 = conv_relu(n.relu3_1, 128)</span><br><span class="line">n.pool3 = max_pool(n.relu3_2)</span><br><span class="line"></span><br><span class="line">n.conv4_1, n.relu4_1 = conv_relu(n.pool3, 256)</span><br><span class="line">n.conv4_2, n.relu4_2 = conv_relu(n.relu4_1, 256)</span><br><span class="line"># n.conv4_3, n.relu4_3 = conv_relu(n.relu4_2, 512)</span><br><span class="line">n.pool4 = max_pool(n.relu4_2)</span><br><span class="line"></span><br><span class="line">n.conv5_1, n.relu5_1 = conv_relu(n.pool4, 256)</span><br><span class="line">n.conv5_2, n.relu5_2 = conv_relu(n.relu5_1, 256)</span><br><span class="line"># n.conv5_3, n.relu5_3 = conv_relu(n.relu5_2, 512)</span><br><span class="line">n.pool5 = max_pool(n.relu5_2)</span><br><span class="line"></span><br><span class="line">n.score = conv(n.pool5, 1)</span><br><span class="line">n.loss = L.SigmoidCrossEntropyLoss(n.score, n.label)</span><br><span class="line"># n.loss = L.MultiStageMeanfield()</span><br></pre></td></tr></table></figure>
+<p>分别为一次导入的图片个数，channel，heigth ，width。</p>
+<h3 id="Solver-优化"><a href="#Solver-优化" class="headerlink" title="Solver 优化"></a><a href="https://rowl1ng.gitbooks.io/machine-learning/content/optimizer.html" target="_blank" rel="noopener">Solver 优化</a></h3><p>此处的SGD指mini-batch gradient descent，关于batch gradient descent, stochastic gradient descent, 以及 mini-batch gradient descent的具体区别就不细说了。现在的SGD一般都指mini-batch gradient descent。<br>SGD就是每一次迭代计算梯度，然后对参数进行更新，是最常见的优化方法了。<br>此处主要说下SGD的缺点：（正因为有这些缺点才让这么多大神发展出了后续的各种算法）</p>
+<ul>
+<li>选择合适的learning rate比较困难</li>
+<li>对所有的参数更新使用同样的learningrate。对于稀疏数据或者特征，有时我们可能想更新快一些对于不经常出现的特征，对于常出现的特征更新慢一些，这时候SGD就不太能满足要求了</li>
+<li>SGD容易收敛到局部最优，并且容易被困在鞍点</li>
+</ul>
+<p>损失平面等高线：</p>
+<p><img src="http://img.blog.csdn.net/20160824161755284" alt="损失平面等高线"></p>
+<p>在鞍点处的比较：</p>
+<p><img src="http://img.blog.csdn.net/20160824161815758" alt="在鞍点处的比较"></p>
+<p>在Deep Learning中，往往loss function是非凸的，没有解析解，我们需要通过优化方法来求解。solver的主要作用就是交替调用前向（forward)算法和后向（backward)算法来更新参数，从而最小化loss，实际上就是一种迭代的优化算法。</p>
+<p>到目前的版本，caffe提供了六种优化算法来求解最优参数，在solver配置文件中，通过设置type类型来选择。<br>  在训练多通道图片时，此处最好需要有一个meanfile参数。.binaryproto</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> train_net: &quot;train.prototxt&quot;</span><br><span class="line"># train_net: &quot;TVG_CRFRNN_new_deploy.prototxt&quot;</span><br><span class="line">test_net: &quot;val.prototxt&quot;</span><br><span class="line">test_iter: 16</span><br><span class="line">test_interval: 500</span><br><span class="line">base_lr: 5e-4</span><br><span class="line">lr_policy: &quot;fixed&quot;</span><br><span class="line">momentum: 0.99</span><br><span class="line">type: &quot;Adam&quot;</span><br><span class="line">weight_decay: 0.0005</span><br><span class="line">display: 100</span><br><span class="line">max_iter: 1000</span><br><span class="line">snapshot: 1000</span><br><span class="line">snapshot_prefix: &quot;snapshot/train&quot;</span><br><span class="line">solver_mode: GPU</span><br></pre></td></tr></table></figure>
+<p>This parameter indicates how the learning rate should change over time. This value is a quoted string.</p>
+<ol>
+<li>Options include:</li>
+</ol>
+<ul>
+<li>“step” - drop the learning rate in step sizes indicated by the gamma parameter.</li>
+<li>“multistep” - drop the learning rate in step size indicated by the gamma at each specified stepvalue.</li>
+<li>“fixed” - the learning rate does not change.</li>
+<li>“exp” - gamma^iteration</li>
+<li>“poly” -</li>
+<li>“sigmoid” -</li>
+</ul>
+<h3 id="训练caffemodel"><a href="#训练caffemodel" class="headerlink" title="训练caffemodel"></a>训练caffemodel</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">../CRFasRNN-merge/caffe-master/build/tools/caffe train -solver solver.prototxt</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">solver = caffe.SGDSolver(&apos;models/bvlc_reference_caffenet/solver.prototxt&apos;)</span><br></pre></td></tr></table></figure>
+<h3 id="整合crfasrnn"><a href="#整合crfasrnn" class="headerlink" title="整合crfasrnn"></a>整合crfasrnn</h3><p><code>net.params</code> : a vector of blobs for <strong>weight</strong> and <strong>bias</strong> parameters</p>
+<p><code>net.params[&#39;conv1_1&#39;][0]</code> contains the weight parameters, an array of shape (32, 1, 5, 5) net.params<a href="http://blog.csdn.net/xuanwu_yan/article/details/7962508" target="_blank" rel="noopener">‘conv’</a> contains the bias parameters, an array of shape (3,)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">solver = caffe.SGDSolver(&apos;solver.prototxt&apos;)</span><br><span class="line">solver.net.copy_from(&apos;pretrained_param_file&apos;)</span><br><span class="line">[...]</span><br><span class="line"></span><br><span class="line">## control layer&apos;s initialization</span><br><span class="line">halt_training = False</span><br><span class="line">for layer in solver.net.params.keys():</span><br><span class="line">  for index in range(0, 2):</span><br><span class="line">    if len(solver.net.params[layer]) &lt; index+1:</span><br><span class="line">      continue</span><br><span class="line"></span><br><span class="line">    if np.sum(solver.net.params[layer][index].data) == 0:</span><br><span class="line">      print layer + &apos; is composed of zeros!&apos;</span><br><span class="line">      halt_training = True</span><br><span class="line"></span><br><span class="line">if halt_training:</span><br><span class="line">  print &apos;Exiting.&apos;</span><br><span class="line">  exit()</span><br></pre></td></tr></table></figure>
+<p>To launch <strong>one step</strong> of the gradient descent, that is a forward propagation, a backward propagation and the update of the net params given the gradients (update of the net.params[k][j].data) :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">solver.step(1)</span><br></pre></td></tr></table></figure>
+<h3 id="MultiStageMeanfieldLayer"><a href="#MultiStageMeanfieldLayer" class="headerlink" title="MultiStageMeanfieldLayer"></a>MultiStageMeanfieldLayer</h3><h2 id="4-细节"><a href="#4-细节" class="headerlink" title="4. 细节"></a>4. 细节</h2><h3 id="Loss-Function"><a href="#Loss-Function" class="headerlink" title="Loss Function"></a>Loss Function</h3><ul>
+<li>训练时迭代5，测试时迭代10</li>
+<li>Loss function：<ul>
+<li>训练时：log likelihood</li>
+<li>测试时：average IU</li>
+</ul>
+</li>
+</ul>
+<p>average intersection over union(IU)</p>
+<h3 id="Normalization-techniques"><a href="#Normalization-techniques" class="headerlink" title="Normalization techniques"></a>Normalization techniques</h3><p>rectified linear unit (ReLU)</p>
+<h2 id="5-环境搭建"><a href="#5-环境搭建" class="headerlink" title="5. 环境搭建"></a>5. 环境搭建</h2><p>安装python依赖库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">TOOLS=../../caffe/build/tools</span><br><span class="line">WEIGHTS=TVG_CRFRNN_COCO_VOC.caffemodel</span><br><span class="line">SOLVER=TVG_CRFRNN_new_solver.prototxt</span><br><span class="line"></span><br><span class="line">$TOOLS/caffe train -solver $SOLVER -weights $WEIGHTS -gpu 0</span><br></pre></td></tr></table></figure>
+<h3 id="Debug"><a href="#Debug" class="headerlink" title="Debug"></a>Debug</h3><ol>
+<li>cuda</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">libcudart.so.7.0: cannot open shared object file: No such file or directory</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ldconfig /usr/local/cuda-7.5/lib64</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>Python</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unknown layer type: Python (known types: AbsVal, Accuracy, ArgMax, BNLL, Concat, ContrastiveLoss, Convolution, Crop, Data, Deconvolution, Dropout, DummyData, Eltwise, Embed, EuclideanLoss, Exp, Filter, Flatten, HDF5Data, HDF5Output, HingeLoss, Im2col, ImageData, InfogainLoss, InnerProduct, LRN, Log, MVN, MemoryData, MultiStageMeanfield, MultinomialLogisticLoss, PReLU, Pooling, Power, ReLU, Reduction, Reshape, SPP, Sigmoid, SigmoidCrossEntropyLoss, Silence, Slice, Softmax, SoftmaxWithLoss, Split, TanH, Threshold, Tile, WindowData)</span><br></pre></td></tr></table></figure>
+<p>修改Makefile.config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WITH_PYTHON_LAYER := 1</span><br></pre></td></tr></table></figure>
+<p>重新make caffe</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rm -rf ./build/*</span><br><span class="line">make all -j8</span><br></pre></td></tr></table></figure>
+<p> 8 is the number of parallel threads for compilation (a good choice for the number of threads is the number of cores in your machine).</p>
+<p>2.1 build errors:undefined cv::imread() cv::imencode() …</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake</span><br></pre></td></tr></table></figure>
+<h2 id="6-Related-Work"><a href="#6-Related-Work" class="headerlink" title="6. Related Work"></a>6. Related Work</h2><ul>
+<li>《<em>Efficient Inference in Fully Connected CRFs with Gaussian Edge Potentials</em>》</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="随缘集 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="随缘集 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CNN/" rel="tag"># CNN</a>
+          
+            <a href="/tags/图像分割/" rel="tag"># 图像分割</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/24/write-2015-3-24-Shandong/" rel="next" title="在山的那边海的那边">
+                <i class="fa fa-chevron-left"></i> 在山的那边海的那边
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/25/tech-2015-12-25-word2vec/" rel="prev" title="How to learn word2vec">
+                How to learn word2vec <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80Mjc5MS8xOTMzOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">随缘集</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/frcmail" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:frcmail@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友链
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.guancha.cn/" title="观察者网" target="_blank">观察者网</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-理论部分"><span class="nav-number">2.</span> <span class="nav-text">1. 理论部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Feature-Extraction-CNN"><span class="nav-number">2.1.</span> <span class="nav-text">Feature Extraction : CNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于RNN"><span class="nav-number">2.2.</span> <span class="nav-text">关于RNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于CRF-概率图模型"><span class="nav-number">2.3.</span> <span class="nav-text">关于CRF(概率图模型)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Recall-the-HMM"><span class="nav-number">2.3.1.</span> <span class="nav-text">Recall the HMM :</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-网络构建"><span class="nav-number">3.</span> <span class="nav-text">2. 网络构建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mean-field-CNN-softmax"><span class="nav-number">3.1.</span> <span class="nav-text">Mean-field = CNN + softmax</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-首先初始化："><span class="nav-number">3.1.1.</span> <span class="nav-text">1. 首先初始化：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Message-passing"><span class="nav-number">3.1.2.</span> <span class="nav-text">2. Message passing:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Weighting-Filter-Outputs"><span class="nav-number">3.1.3.</span> <span class="nav-text">3. Weighting Filter Outputs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Compatibility-Transform"><span class="nav-number">3.1.4.</span> <span class="nav-text">4. Compatibility Transform</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-unary-compatibility-transform"><span class="nav-number">3.1.5.</span> <span class="nav-text">5. unary-compatibility transform</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Normalization：softmax"><span class="nav-number">3.1.6.</span> <span class="nav-text">6. Normalization：softmax</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Iterable-Mean-field-RNN"><span class="nav-number">3.2.</span> <span class="nav-text">Iterable Mean-field = RNN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Caffe上的实现"><span class="nav-number">4.</span> <span class="nav-text">3. Caffe上的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自己写Python层作为输入层"><span class="nav-number">4.1.</span> <span class="nav-text">自己写Python层作为输入层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成训练网络"><span class="nav-number">4.2.</span> <span class="nav-text">生成训练网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Solver-优化"><span class="nav-number">4.3.</span> <span class="nav-text">Solver 优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#训练caffemodel"><span class="nav-number">4.4.</span> <span class="nav-text">训练caffemodel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#整合crfasrnn"><span class="nav-number">4.5.</span> <span class="nav-text">整合crfasrnn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MultiStageMeanfieldLayer"><span class="nav-number">4.6.</span> <span class="nav-text">MultiStageMeanfieldLayer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-细节"><span class="nav-number">5.</span> <span class="nav-text">4. 细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Loss-Function"><span class="nav-number">5.1.</span> <span class="nav-text">Loss Function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Normalization-techniques"><span class="nav-number">5.2.</span> <span class="nav-text">Normalization techniques</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-环境搭建"><span class="nav-number">6.</span> <span class="nav-text">5. 环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">6.1.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Debug"><span class="nav-number">6.2.</span> <span class="nav-text">Debug</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Related-Work"><span class="nav-number">7.</span> <span class="nav-text">6. Related Work</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">随缘集</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="object detection,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="pytorch version of Detectron">
+<meta name="keywords" content="object detection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Detectron代码分析：从Faster R-CNN 到 Mask R-CNN">
+<meta property="og:url" content="http://yoursite.com/2018/03/22/tech-2018-3-22-faster-rcnn/index.html">
+<meta property="og:site_name" content="剑来小站">
+<meta property="og:description" content="pytorch version of Detectron">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/ljdcym3rohxn1rwe6sqxl67h/img_5aa6f476535f7.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/h9i0bgmhs3da2yn7acgzouo2/img_5aa46e9e0bbd7.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/zyrc1nxcdube8ctwotdkkj29/img_5a9ffec911c19.png">
+<meta property="og:image" content="https://tryolabs.com/images/blog/post-images/2018-01-18-faster-rcnn/vgg.b6e48b99.png">
+<meta property="og:image" content="https://tryolabs.com/images/blog/post-images/2018-01-18-faster-rcnn/image-to-feature-map.89f5aecb.png">
+<meta property="og:image" content="https://tryolabs.com/images/blog/post-images/2018-01-18-faster-rcnn/anchors-centers.141181d6.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/o1qnl7ql20gxbcebb1b4f8aa/img_5aa59c8da4c4b.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/y1x4ad3ch2bcmps4r3ubur96/img_5aa59d170c750.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/cv2l758k7dyj022k0iinwsm1/image_1c8u6egich3e1ha41d3o1m22s3g16.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/elabj076z56xa1xsfbwqyy50/image_1c8u6f7esu9i1sl510hs1pnm1qvl1j.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/lvmo09rywt1pyvil3vphwvtc/fpn_rpn.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/tw90x779iyn4kyezgamq9ztj/fpn_faster_rcnn.jpeg">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/ps6dpvykieraqc80a88ov81o/img_5aa05d3ecef3e.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/3wdn06u2j39hax3tfl72fz54/image_1cle4qa281hb61mdq1pl7i0mf7919.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/l8pye2hx4ow6m1exbhz04cwc/img_5aa0695484e3e.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/jpo1lb32swi80srohmotmyjd/img_5aa5766d53b63.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/ct3ekd3g5cmjns60k0knnp2u/img_5aa13d4d911d3.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/dzkgskozvpbqmx6kdkf35gft/img_5aa32302afc0b-1.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/fzk6ue5q4avnq790p0xef3j8/img_5aa402baba3a1-1.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/jxcixxdomu4s3dxe6mkhtnni/img_5aa4255fdacb6.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/kip2q7kejresvo9f74nu2xn3/img_5aa55c81eac0a.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/xtlc2ntcxq99hkcz06k8zs7k/img_5aa55c97f3287.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/gtg0hic03zafemdwc7yjol5n/img_5aa1cd250f265-1.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/ko6f7dt80ai9w5sfb85m1e2v/img_5aa1bf41503d4-1%20.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/oesmj70d6c1cybe1ukfme81a/img_5aa70ff399c57.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/iam1jbw1cy9yh421dnpk521j/img_5aa580271bea6.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/zw21rkn6g6epcsnjmp6aanw6/img_5aa5809cc7206.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/qp5523r1dm9dvkx40vmbc8is/img_5aa581709aa82.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/3w0vrvap36yevoy0cnelb0fn/img_5aa5827c1d42c.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/pw80rvcl6ocrbbqslbekme2j/UNADJUSTEDNONRAW_thumb_5e2.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/5qfym3rpsdgyxs35izkg23u4/img_5aa7c828703ab.png">
+<meta property="og:image" content="http://static.zybuluo.com/sixijinling/zknxyptjoaa3pzbyw1a4dxd7/img_5aa7c84451f81.png">
+<meta property="og:updated_time" content="2019-02-22T09:14:50.964Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Detectron代码分析：从Faster R-CNN 到 Mask R-CNN">
+<meta name="twitter:description" content="pytorch version of Detectron">
+<meta name="twitter:image" content="http://static.zybuluo.com/sixijinling/ljdcym3rohxn1rwe6sqxl67h/img_5aa6f476535f7.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/22/tech-2018-3-22-faster-rcnn/">
+
+
+
+
+
+  <title>Detectron代码分析：从Faster R-CNN 到 Mask R-CNN | 剑来小站</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">剑来小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/22/tech-2018-3-22-faster-rcnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="随缘集">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="剑来小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Detectron代码分析：从Faster R-CNN 到 Mask R-CNN</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T17:00:00+08:00">
+                2018-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tech/" itemprop="url" rel="index">
+                    <span itemprop="name">tech</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">
+                  pytorch version of Detectron
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/facebookresearch/Detectron" target="_blank" rel="noopener">Detectron</a>（使用caffe2）是face book开源的的各种目标检测算法的打包（比如mask rcnn、FPN的）。<br>本文mask rcnn的部分基于pytorch实现的一版Detectron：<a href="https://github.com/roytseng-tw/Detectron.pytorch" target="_blank" rel="noopener">Detectron.pytorch</a>（参考了<a href="https://github.com/jwyang/faster-rcnn.pytorch" target="_blank" rel="noopener">Faster R-CNN的pytorch实现</a>），</p>
+<p>需要安装：</p>
+<ul>
+<li>pytorch &gt; 0.3.0</li>
+<li>pycocotools</li>
+<li>easydict</li>
+<li>cython</li>
+<li>cffi</li>
+</ul>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><ul>
+<li>IOU<br><img src="http://static.zybuluo.com/sixijinling/ljdcym3rohxn1rwe6sqxl67h/img_5aa6f476535f7.png" alt="img_5aa6f476535f7.png-13.4kB"></li>
+<li>先明确foreground和background的概念：前景<code>fg</code>（foreground）代表有物体（不管是哪个类别），背景<code>bg</code>（background）就是没有任何物体。</li>
+</ul>
+<h1 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">- tools</span><br><span class="line">    - train_net.py: 训练</span><br><span class="line">    - test_net.py: 测试</span><br><span class="line">- configs</span><br><span class="line">    - 各种网络的配置文件.yml</span><br><span class="line">- lib</span><br><span class="line">    - core：</span><br><span class="line">        - config.py: 定义了通用型rcnn可能用到的所有超参</span><br><span class="line">        - test_engine.py: 整个测试流程的控制器</span><br><span class="line">        - test.py</span><br><span class="line">    - dataset: 原始数据IO、预处理</span><br><span class="line">        - your_data.py：在这里定义你自己的数据、标注读取方式</span><br><span class="line">        - roidb.py</span><br><span class="line">    - roi_data：数据工厂，根据config的网络配置生成需要的各种roi、anchor等</span><br><span class="line">        - loader.py</span><br><span class="line">        - rpn.py: 生成RPN需要的blob</span><br><span class="line">        - data_utils.py: 生成anchor</span><br><span class="line">    - modeling: 各种网络插件，rpn、mask、fpn等</span><br><span class="line">        - model_builder.py：构造generalized rcnn</span><br><span class="line">        - ResNet.py: Resnet backbone相关</span><br><span class="line">        - FPN.py：RPN with an FPN backbone</span><br><span class="line">        - rpn_heads.py：RPN and Faster R-CNN outputs and losses</span><br><span class="line">        - mask_rcnn_heads：Mask R-CNN outputs and losses</span><br><span class="line">    - utils：小工具</span><br></pre></td></tr></table></figure>
+<h1 id="数据输入"><a href="#数据输入" class="headerlink" title="数据输入"></a>数据输入</h1><h2 id="图像预处理"><a href="#图像预处理" class="headerlink" title="图像预处理"></a>图像预处理</h2><p>原项目的<code>lib/datasets</code>中提供了imagenet、COCO等通用数据集的调用类，如果想使用自己的数据的话就需要仿照着设计yourdata.py。几个要注意的点：</p>
+<ul>
+<li><code>_classes</code>：所有框的类别，比较特殊的就是<code>__background__</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Pascal_VOC</span><br><span class="line">self._classes = (&apos;__background__&apos;,  # always index 0</span><br><span class="line">                 &apos;aeroplane&apos;, &apos;bicycle&apos;, &apos;bird&apos;, &apos;boat&apos;,</span><br><span class="line">                 &apos;bottle&apos;, &apos;bus&apos;, &apos;car&apos;, &apos;cat&apos;, &apos;chair&apos;,</span><br><span class="line">                 &apos;cow&apos;, &apos;diningtable&apos;, &apos;dog&apos;, &apos;horse&apos;,</span><br><span class="line">                 &apos;motorbike&apos;, &apos;person&apos;, &apos;pottedplant&apos;,</span><br><span class="line">                 &apos;sheep&apos;, &apos;sofa&apos;, &apos;train&apos;, &apos;tvmonitor&apos;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>关键要修改的函数就是<code>_load_XXX_annotation(self, index)</code>（XXX是你的数据集的名字），要实现的功能就是给定image的index，返回所有的bounding box标注。</p>
+<ul>
+<li>返回的roidb长这样：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> return &#123;&apos;width&apos;: width,</span><br><span class="line">         &apos;height&apos;: height,</span><br><span class="line">         &apos;boxes&apos;: np.array(boxes),</span><br><span class="line">         &apos;gt_classes&apos;: np.array(gt_classes),</span><br><span class="line">         &apos;gt_overlaps&apos;: overlaps,</span><br><span class="line">         &apos;flipped&apos;: False, # 用于data augmentation</span><br><span class="line">         &apos;seg_areas&apos;: np.array(seg_areas)&#125;</span><br><span class="line"># 得到roidb之后还会计算：</span><br><span class="line">&apos;max_classes&apos; # 和哪个class重合最大？</span><br><span class="line">&apos;max_overlaps&apos; # 和该class重合率[0,1]</span><br><span class="line"># 后面的采样环节会用到</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><code>gt_overlaps</code>：有些数据集（比如COCO）中一个bbox囊括了好几个对象，称之为<code>crowd box</code>，训练时需要把他们移除，移除的手段就是把它们的overlap (with all categories)设为负值（比如-1）。</p>
+</li>
+<li><code>seg_areas</code>: mask rcnn根据segment的区域大小排序</li>
+</ul>
+<p>说一下<a href="https://github.com/roytseng-tw/Detectron.pytorch/blob/9294ec13d4a59cf449b09e1ada72a56b3420249c/lib/datasets/roidb.py" target="_blank" rel="noopener">dataset/roidb.py</a>这个文件，里面最重要的就是<code>combined_roidb_for_training</code>，它是训练数据的“组装车间”，当需要同时训练多个数据集时尤为方便。通过调用每个数据集的get_roidb()方法获得各个数据集的roidb，并对相应数据集进行augmentation，这里主要是横向翻转（flipped），最后返回的是augmentation后打包在一起的roidb（前半部分是原始图像+标注，后半部分是原始图像+翻转后的标注）。</p>
+<ul>
+<li>减去的均值是固定的$$3 \times 1$$向量（对train和test都是一样）；</li>
+<li>Agmentation: 默认是Horizontal Flip（可以仿照加Vertically Flip）</li>
+<li>控制训练时每块GPU上每个minibatch的ratio都相同:TRAIN.<code>ASPECT_GROUPING</code> = True</li>
+<li>计算bbox regrssion $$\delta$$。需要的关键文件：<a href="https://github.com/roytseng-tw/Detectron.pytorch/blob/9294ec13d4a59cf449b09e1ada72a56b3420249c/lib/utils/boxes.py" target="_blank" rel="noopener">utils/boxes.py</a><ul>
+<li>bbox_transform_inv：通过proposal box和groundtruth box 计算bbox regrssion $$\delta$$</li>
+<li>MODEL.<code>BBOX_REG_WEIGHTS</code> :加权用，默认是(10., 10., 5., 5.)</li>
+</ul>
+</li>
+</ul>
+<p><a href="https://github.com/roytseng-tw/Detectron.pytorch/blob/9294ec13d4a59cf449b09e1ada72a56b3420249c/lib/roi_data/loader.py" target="_blank" rel="noopener">roi_data/loader.py</a>中的RoiDataLoader对上面处理完的roidb“加工”成 data，主要通过get_minibatch获得某张图的一个minibatch。可以看minibatch.py的实现。首先会初始化所需blob的name list，比如FPN对应的list如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[&apos;roidb&apos;,</span><br><span class="line">&apos;data&apos;, # （1，3，2464，2016）</span><br><span class="line">&apos;im_info&apos;,</span><br><span class="line"></span><br><span class="line">&apos;rpn_labels_int32_wide_fpn2&apos;, # （1，3，752，752）</span><br><span class="line">&apos;rpn_labels_int32_wide_fpn3&apos;, # （1，3，376，376）</span><br><span class="line">&apos;rpn_labels_int32_wide_fpn4&apos;,  # （1，3，188，188）</span><br><span class="line">&apos;rpn_labels_int32_wide_fpn5&apos;, # （1，3，94，94）</span><br><span class="line">&apos;rpn_labels_int32_wide_fpn6&apos;, # （1，3，47，47）</span><br><span class="line"></span><br><span class="line">&apos;rpn_bbox_targets_wide_fpn2&apos;, # （1，12，752，752）</span><br><span class="line">&apos;rpn_bbox_targets_wide_fpn3&apos;,</span><br><span class="line">&apos;rpn_bbox_targets_wide_fpn6&apos;,</span><br><span class="line">&apos;rpn_bbox_targets_wide_fpn4&apos;,</span><br><span class="line">&apos;rpn_bbox_targets_wide_fpn5&apos;,</span><br><span class="line"></span><br><span class="line">&apos;rpn_bbox_outside_weights_wide_fpn2&apos;, # （1，12，752，752）</span><br><span class="line">&apos;rpn_bbox_outside_weights_wide_fpn3&apos;,</span><br><span class="line">&apos;rpn_bbox_outside_weights_wide_fpn4&apos;,</span><br><span class="line">&apos;rpn_bbox_outside_weights_wide_fpn5&apos;,</span><br><span class="line">&apos;rpn_bbox_outside_weights_wide_fpn6&apos;,</span><br><span class="line"></span><br><span class="line">&apos;rpn_bbox_inside_weights_wide_fpn6&apos;,</span><br><span class="line">&apos;rpn_bbox_inside_weights_wide_fpn5&apos;,</span><br><span class="line">&apos;rpn_bbox_inside_weights_wide_fpn4&apos;,</span><br><span class="line">&apos;rpn_bbox_inside_weights_wide_fpn3&apos;,</span><br><span class="line">&apos;rpn_bbox_inside_weights_wide_fpn2&apos;] # （1，12，752，752）</span><br></pre></td></tr></table></figure></p>
+<p>在获得list后，使用<a href="https://github.com/facebookresearch/Detectron/blob/e5bb3a8ff0b9caf59c76037726f49465d6b9678b/detectron/roi_data/rpn.py" target="_blank" rel="noopener">roi_data/rpn.py</a>的add_rpn_blobs来填上对应的blob。<code>_get_rpn_blobs</code>的流程：</p>
+<ul>
+<li>生成anchor</li>
+<li>TRAIN.<code>RPN_STRADDLE_THRESH</code>：筛除超出image范围的RPN anchor，默认是0.</li>
+<li>计算anchor label： positive：label=1； negative：label=0；don’t care: label=-1<ul>
+<li>计算anchor和gt box的overlap<ul>
+<li>Fg label（positive）：和每个gt重合率最大的那个anchor；超过TRAIN.<code>RPN_POSITIVE_OVERLAP</code>的anchor</li>
+</ul>
+</li>
+<li>控制数量，采样positive 和 nagative label，超过的将label设为-1<ul>
+<li>fg/正样本：<ul>
+<li>总数 = <code>TRAIN.FG_FRACTION</code> * <code>TRAIN.BATCH_SIZE_PER_IM</code></li>
+<li>条件：&gt; <code>TRAIN.FG_THRESH</code>，随机选择达到条件的fg，数量&lt;=总数：fg_inds = np.where(<code>max_overlaps</code> &gt;= cfg.<code>TRAIN.FG_THRESH</code>)[0]</li>
+</ul>
+</li>
+<li>bg/负样本：<ul>
+<li>总数 = <code>TRAIN.BATCH_SIZE_PER_IM</code> - 正样本总数</li>
+<li>条件:[<code>BG_THRESH_LO</code>, <code>BG_THRESH_HI</code>)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>bbox regression loss:loss(x) = weight_outside <em> L(weight_inside </em> x)<ul>
+<li>bbox_inside_weights: bbox regression只用positive example来训，所以只需把positive的weight设为1.0，其他设为0即可（只有那些分类正确了的box才能参与，分类错误的直接不考虑了）</li>
+<li>bbox_outside_weights: bbox regression loss是对minibatch中的图片数取平均，</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>着部分的逻辑可以看作是确保bg和fg的样本数量之和是一个常数。万一找到的bg样本太少，就随机重复一些来填补que<br>Bbox regression loss has the form:</p>
+</blockquote>
+<pre><code># Inside weights allow us to set zero loss on an element-wise basis
+# Bbox regression is only trained on positive examples so we set their
+# weights to 1.0 (or otherwise if config is different) and 0 otherwise
+</code></pre><blockquote>
+<p>代码实现上：使用了mask array将for循环操作转化成了矩阵乘法。mask array标注了每个anchor的正确物体类别。</p>
+</blockquote>
+<h2 id="正负采样"><a href="#正负采样" class="headerlink" title="正负采样"></a>正负采样</h2><p>关键文件：<a href="https://github.com/roytseng-tw/Detectron.pytorch/blob/9294ec13d4a59cf449b09e1ada72a56b3420249c/lib/roi_data/minibatch.py" target="_blank" rel="noopener">roi_data/minibatch.py</a></p>
+<ul>
+<li>考虑到一块gpu的显存有限，我们往往需要将图像rescale的一定大小。 <code>targetSize</code> 和 <code>maxSize</code> 默认是 600 和 1000 ，根据显存大小和图片大小来设计就好（比如最长边限制在2100或者短边是1700的时候一块gpu只能跑一个sample）。<ul>
+<li><code>TRAIN.SCALES</code>：一个list，默认是[600,]，如果有多个值，在采样的时候是随机分配给image的：<code>np.random.randint(0, high=len(cfg.TRAIN.SCALES), size=num_images)</code></li>
+</ul>
+</li>
+</ul>
+<p>关键文件： <a href="https://github.com/roytseng-tw/Detectron.pytorch/blob/9294ec13d4a59cf449b09e1ada72a56b3420249c/lib/roi_data/fast_rcnn.py" target="_blank" rel="noopener">roi_data/fast_rcnn.py</a></p>
+<ul>
+<li>_sample_rois：随机采样fg/bg examples，控制数量的方法和之前一样</li>
+</ul>
+<p>Rescale的基本逻辑如下图：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/h9i0bgmhs3da2yn7acgzouo2/img_5aa46e9e0bbd7.png" alt="rescale"></p>
+<p>这一步在<strong>决定使用的anchor size</strong>时一定要考虑进去，github上有人写过基于自己数据的分析脚本，基本思路是还原rescale的过程，分析rescale factor，估计一下roi的大小，从而决定anchor size。</p>
+<p>计算所有ROI和所有ground truth的max overlap，从而判断是fg还是bg。这里用到了两个参数：</p>
+<ul>
+<li><code>TRAIN.FG_THRESH</code>：用来判断fg ROI（default：0.5）</li>
+<li><code>TRAIN.BG_THRESH_LO</code> ~ <code>TRAIN.BG_THRESH_HI</code>：这个区间的是bg ROI。(default 0.1, 0.5 respectively)</li>
+</ul>
+<p>这样的设计可以看作是 “hard negative mining” ，用来给classifier投喂更难的bg样本。</p>
+<p>输入:</p>
+<ul>
+<li>proposal layer得到的ROIs</li>
+<li>ground truth information</li>
+</ul>
+<p>输出:</p>
+<ul>
+<li>选出满足overlap要求的bg、fg的ROI。</li>
+<li>每个roi针对不同类别的regression coefficients。</li>
+</ul>
+<p>Parameters:</p>
+<ul>
+<li><code>TRAIN.BATCH_SIZE</code>: (default 128) 所选fg和bg box的最大数量.</li>
+<li><code>TRAIN.FG_FRACTION</code>: (default 0.25). fg box 不能超过 BATCH_SIZE*FG_FRACTION</li>
+</ul>
+<h1 id="Generalized-RCNN结构"><a href="#Generalized-RCNN结构" class="headerlink" title="Generalized RCNN结构"></a>Generalized RCNN结构</h1><p>R-CNN包括三种主要网络：</p>
+<ol>
+<li>Head：输入(w,h,3)生成feature map，降采样了16倍； w和h是预处理以后的图片大小哦</li>
+<li>Region Proposal Network (RPN)：基于feature map，预测ROI；<ul>
+<li><code>Crop Pooling</code>：从feature map中crop相应位置</li>
+</ul>
+</li>
+<li>Classification Network：对crop出的区域进行分类。</li>
+</ol>
+<p>在pytorch版Detectron中，<a href="https://github.com/roytseng-tw/Detectron.pytorch/blob/9294ec13d4a59cf449b09e1ada72a56b3420249c/lib/modeling/model_builder.py" target="_blank" rel="noopener">medeling/model_builder.py</a>中的<code>generalized_rcnn</code>将FPN、fast rcnn、mask rcnn作为“插件”，通过config文件中控制“插拔”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MODEL:</span><br><span class="line">  TYPE: generalized_rcnn</span><br><span class="line">  CONV_BODY: FPN.fpn_ResNet50_conv5_body # backbone</span><br><span class="line">  FASTER_RCNN: True # RPN ON</span><br><span class="line">  MASK_ON: True # 使用mask支线：mask rcnn除了box head，还有一个mask head。</span><br></pre></td></tr></table></figure>
+<p>在Detectron的实现里，可以像上面这样在config文件中灵活选择使用的backbone（比如conv body使用Res50_conv4,roi_mask_head和box head共同使用fcn_head）。代码模块划分：</p>
+<ul>
+<li><code>Conv_Body</code> 对应下图中的head: 输入im_data，返回blob_conv</li>
+<li><code>RPN</code> 对应下图中的Region Proposal Network: loss_rpn_cls + loss_rpn_bbox # 输入blob_conv，返回rpn_ret;</li>
+<li><code>BBOX_Branch</code>：loss_rcnn_cls + loss_rcnn_bbox<ul>
+<li><code>Box_Head</code> 对应下图中的Generate Grid Points Sample Feature Maps + Layer4 # 输入conv_body, rpn_ret返回box_feat<ul>
+<li>通过FAST_RCNN.ROI_BOX_HEAD设置</li>
+</ul>
+</li>
+<li><code>Box_Outs</code> 对应下图中的cls_score_net + bbx_pred_net# 输入box_feat, 返回cls_score, bbox_pred, 计算loss_cls, loss_bbox</li>
+</ul>
+</li>
+<li><code>Mask_Branch</code>: loss_rcnn_mask<ul>
+<li>Mask_Head# 输入blob_conv, rpn_net, 返回mask_feat<ul>
+<li>通过MRCNN.ROI_MASK_HEAD设置</li>
+</ul>
+</li>
+<li>Mask_Outs# 输入mask_feat，返回mask_pred</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://static.zybuluo.com/sixijinling/zyrc1nxcdube8ctwotdkkj29/img_5a9ffec911c19.png" alt="network architecture"></p>
+<p>先来看看Head怎么得到feature map。拿VGG16作为backbone来举例的话，一个完整的VGG16网络长这样：</p>
+<p><img src="https://tryolabs.com/images/blog/post-images/2018-01-18-faster-rcnn/vgg.b6e48b99.png" alt="VGG16"></p>
+<p>其中红色部分就是下采样的时刻。原始论文里使用VGG16，因为提feature map只用了最后一次max pooling前面的部分，所以留下来的四次pooling总共下采样是16倍。得到的feature map长这样：</p>
+<p><img src="https://tryolabs.com/images/blog/post-images/2018-01-18-faster-rcnn/image-to-feature-map.89f5aecb.png" alt="under sampling"></p>
+<p>最终的feature映射回原图的话大概长这样：</p>
+<p><img src="https://tryolabs.com/images/blog/post-images/2018-01-18-faster-rcnn/anchors-centers.141181d6.png" alt="此处输入图片的描述"></p>
+<p>有了feature map以后，开始走RCNN的主体流程：</p>
+<h2 id="Backbone"><a href="#Backbone" class="headerlink" title="Backbone"></a>Backbone</h2><p>在初始化generalized rcnn时，首先要选择backbone（也许可以意译为“骨干网”）。通过cfg.MODEL.<code>CONV_BODY</code>即可选择backbone：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.Conv_Body = get_func(cfg.MODEL.CONV_BODY)() # 如果是FPN，会在这一步直接基于backbone完成FPN的构造</span><br></pre></td></tr></table></figure>
+<h3 id="Resnet"><a href="#Resnet" class="headerlink" title="Resnet"></a>Resnet</h3><p>Resnet.py打包了各种resnet的backbone，比如ResNet50_conv5_body：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def ResNet50_conv5_body():</span><br><span class="line">    return ResNet_convX_body((3, 4, 6, 3)) # block_counts: 分别对应res2、res3、res4、res5</span><br></pre></td></tr></table></figure>
+<p><img src="http://static.zybuluo.com/sixijinling/o1qnl7ql20gxbcebb1b4f8aa/img_5aa59c8da4c4b.png" alt="img_5aa59c8da4c4b.png-50.2kB"></p>
+<p>Resnet中的Bottleneck：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/y1x4ad3ch2bcmps4r3ubur96/img_5aa59d170c750.png" alt="bottleneck"></p>
+<h3 id="FPN"><a href="#FPN" class="headerlink" title="FPN"></a>FPN</h3><p><a href="https://arxiv.org/pdf/1612.03144.pdf" target="_blank" rel="noopener">原始论文</a></p>
+<p>可以选择是否用于RoI transform，是否用于RPN：</p>
+<ol>
+<li><strong>feature extraction</strong>：fpn.py中的fpn类将backbone“加工”为FPN。比如当config里的CONV_BODY: FPN.fpn_ResNet50_conv5_body，实际要做的就是先初始化Resnet.ResNet50_conv5_body，再交给fpn得到fpn_ResNet50_conv5_body。</li>
+<li><strong>RPN with FPN backbone</strong>: 如果rpn使用FPN，那么FPN的每个level都会做RPN，生成相应大小的anchor，返回相应的cls_score和bbox_pred。rpn_heads,FPN.fpn_rpn_outputs</li>
+</ol>
+<p><img src="http://static.zybuluo.com/sixijinling/cv2l758k7dyj022k0iinwsm1/image_1c8u6egich3e1ha41d3o1m22s3g16.png" alt="image_1c8u6egich3e1ha41d3o1m22s3g16.png-228.8kB"></p>
+<p><img src="http://static.zybuluo.com/sixijinling/elabj076z56xa1xsfbwqyy50/image_1c8u6f7esu9i1sl510hs1pnm1qvl1j.png" alt="image_1c8u6f7esu9i1sl510hs1pnm1qvl1j.png-30.8kB"></p>
+<p><img src="http://static.zybuluo.com/sixijinling/lvmo09rywt1pyvil3vphwvtc/fpn_rpn.png" alt="fpn_rpn.png-206.4kB"></p>
+<p><img src="http://static.zybuluo.com/sixijinling/tw90x779iyn4kyezgamq9ztj/fpn_faster_rcnn.jpeg" alt="fpn_faster_rcnn.jpeg-43.5kB"><br>可以看到降采样从P5到P2是(1. / 32., 1. / 16., 1. / 8., 1. / 4.)</p>
+<p>选择：</p>
+<ul>
+<li><code>FPN.EXTRA_CONV_LEVELS</code> ：可以选择是否加上P6，即最上层stride2的降采样后的Output，这样降采样就还加上 1. / 64.</li>
+<li>P2Only：选择是否只使用P2的Output</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"># FPN is enabled if True</span><br><span class="line">__C.FPN.FPN_ON = False</span><br><span class="line"></span><br><span class="line"># Channel dimension of the FPN feature levels</span><br><span class="line">__C.FPN.DIM = 256</span><br><span class="line"></span><br><span class="line"># Initialize the lateral connections to output zero if True</span><br><span class="line">__C.FPN.ZERO_INIT_LATERAL = False</span><br><span class="line"></span><br><span class="line"># Stride of the coarsest FPN level</span><br><span class="line"># This is needed so the input can be padded properly</span><br><span class="line">__C.FPN.COARSEST_STRIDE = 32</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># FPN may be used for just RPN, just object detection, or both</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line"># Use FPN for RoI transform for object detection if True</span><br><span class="line">__C.FPN.MULTILEVEL_ROIS = False</span><br><span class="line"># Hyperparameters for the RoI-to-FPN level mapping heuristic</span><br><span class="line">__C.FPN.ROI_CANONICAL_SCALE = 224  # s0</span><br><span class="line">__C.FPN.ROI_CANONICAL_LEVEL = 4  # k0: where s0 maps to</span><br><span class="line"># Coarsest level of the FPN pyramid</span><br><span class="line">__C.FPN.ROI_MAX_LEVEL = 5</span><br><span class="line"># Finest level of the FPN pyramid</span><br><span class="line">__C.FPN.ROI_MIN_LEVEL = 2</span><br><span class="line"></span><br><span class="line"># Use FPN for RPN if True</span><br><span class="line">__C.FPN.MULTILEVEL_RPN = False</span><br><span class="line"># Coarsest level of the FPN pyramid</span><br><span class="line">__C.FPN.RPN_MAX_LEVEL = 6</span><br><span class="line"># Finest level of the FPN pyramid</span><br><span class="line">__C.FPN.RPN_MIN_LEVEL = 2</span><br><span class="line"># FPN RPN anchor aspect ratios</span><br><span class="line">__C.FPN.RPN_ASPECT_RATIOS = (0.5, 1, 2)</span><br><span class="line"># RPN anchors start at this size on RPN_MIN_LEVEL</span><br><span class="line"># The anchor size doubled each level after that</span><br><span class="line"># With a default of 32 and levels 2 to 6, we get anchor sizes of 32 to 512</span><br><span class="line">__C.FPN.RPN_ANCHOR_START_SIZE = 32</span><br><span class="line"># Use extra FPN levels, as done in the RetinaNet paper</span><br><span class="line">__C.FPN.EXTRA_CONV_LEVELS = False</span><br></pre></td></tr></table></figure>
+<p>其他<a href="https://github.com/jwyang/fpn.pytorch" target="_blank" rel="noopener">FPN的Pytorch实现</a>。</p>
+<h2 id="1-Anchor-Generation-Layer"><a href="#1-Anchor-Generation-Layer" class="headerlink" title="1. Anchor Generation Layer"></a>1. Anchor Generation Layer</h2><p>第一步就是生成anchor（<code>lib/modeling/generate_anchors.py</code>），这里的anchor亦可理解为bounding box。Anchor Generation Layer的任务是对feature map上的每个点都计算若干anchor。而RPN的任务就是判断哪些是好的anchor（包含gt对象）并计算regression coefficients（优化anchor的位置，更好地贴合object）：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/ps6dpvykieraqc80a88ov81o/img_5aa05d3ecef3e.png" alt="generate anchors"></p>
+<ul>
+<li>三种颜色分别代表128x128, 256x256, 512x512</li>
+<li>每种颜色的三个框分别代表比例1:1, 1:2 and 2:1</li>
+<li>每种颜色的三个框的面积是差不多的，因此，可以说最大识别框的面积是 512 x 512</li>
+</ul>
+<blockquote>
+<p>anchor是RPN的windows的大小，在feature map的每一个位置使用不同尺度和长宽比的window提取特征。原论文描述为“a pyramid of regression references”。</p>
+</blockquote>
+<p>对应到代码上：比如<code>ANCHOR_SCALES</code>是[4, 8, 16, 32]，<code>ANCHOR_RATIOS</code>默认是[0.5,1,2]。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#imagenet</span><br><span class="line">args.set_cfgs = [&apos;ANCHOR_SCALES&apos;, &apos;[4, 8, 16, 32]&apos;, &apos;ANCHOR_RATIOS&apos;, &apos;[0.5,1,2]&apos;, &apos;MAX_NUM_GT_BOXES&apos;, &apos;30&apos;]</span><br></pre></td></tr></table></figure>
+<p><img src="http://static.zybuluo.com/sixijinling/3wdn06u2j39hax3tfl72fz54/image_1cle4qa281hb61mdq1pl7i0mf7919.png" alt="image_1cle4qa281hb61mdq1pl7i0mf7919.png-12.7kB"></p>
+<p>但是并不是越多越好，要控制在一定的数量，理由是：</p>
+<ol>
+<li>anchors多了就会造成faster RCNN的时间复杂度提高，anchors多的最极端情况就是overfeats中sliding windows。</li>
+<li>使用多尺度的anchors未必全部对scale-invariant property都有贡献</li>
+</ol>
+<p>所以，在使用自己的数据的时候，统计一下gorund truth框的大小（注意考虑预处理rescale的系数），确定大小范围还是很有必要的。</p>
+<h2 id="2-Region-Proposal-Layer"><a href="#2-Region-Proposal-Layer" class="headerlink" title="2. Region Proposal Layer"></a>2. Region Proposal Layer</h2><p>前一步生成anchor得到的是dense candidate region，rpn根据region是fg的概率来对所有region排序。</p>
+<p>Region Proposal Layer的两个任务就是：</p>
+<ul>
+<li><code>rpn_cls_score</code>:判断anchor是前景还是背景</li>
+<li><code>rpn_bbox_pred</code>:根据<strong>regression coefficient</strong>调整anchor的位置、长宽，从而改进anchor，比如让它们更贴合物体边界。</li>
+</ul>
+<h3 id="2-1-Region-Proposal-Network"><a href="#2-1-Region-Proposal-Network" class="headerlink" title="2.1 Region Proposal Network"></a>2.1 Region Proposal Network</h3><p><img src="http://static.zybuluo.com/sixijinling/l8pye2hx4ow6m1exbhz04cwc/img_5aa0695484e3e.png" alt="RPN"></p>
+<p>值得注意的是，这里的anchor是以降采样16倍的卷积网(called rpn_net in code)得到的feature map为基础的。</p>
+<p>rpn_net的输出通过两个 (1,1)核的卷积网，从而产生bg/fg的class scores以及对应的bbox的regression coefficient。head network使用的stride和生成anchor使用的stride一致，所以anchor和rpn产生的信息是一一对应的，即 number of anchor boxes = number of class scores = number of bounding box regression coefficients = $$\frac{w}{16}\times\frac{h}{16}\times9$$</p>
+<h3 id="2-2-Proposal-Layer"><a href="#2-2-Proposal-Layer" class="headerlink" title="2.2 Proposal Layer"></a>2.2 Proposal Layer</h3><p>proposal layer基于anchor generation layer得到的anchor，使用nms（基于fg的score）来筛除多余的anchor。此外，它还负责将RPN得到的regression coefficients应用到对应的anchor上，从而得到transformed bbox。</p>
+<p><img src="http://static.zybuluo.com/sixijinling/jpo1lb32swi80srohmotmyjd/img_5aa5766d53b63.png" alt="proposal layer"></p>
+<h3 id="2-3-Anchor-Target-Layer"><a href="#2-3-Anchor-Target-Layer" class="headerlink" title="2.3 Anchor Target Layer"></a>2.3 Anchor Target Layer</h3><p>anchor target layer 的目标在于选择可靠的anchor来训练RPN：</p>
+<ol>
+<li>区分bg/fg区域，</li>
+<li>为fg box生成好的bbox regression coefficients</li>
+</ol>
+<p>首先看一看RPN loss的计算过程，了解其中用到的信息有助于理解Anchor Target Layer的流程。</p>
+<h4 id="计算RPN-loss："><a href="#计算RPN-loss：" class="headerlink" title="计算RPN loss："></a>计算RPN loss：</h4><p>前面提到RPN的目标是得到好的bbox，而达到这个目的的必经之路就是：1. 学会判断一个anchor是fg/bg；2. 计算regression coefficients来修正fg anchor的位置、宽、高，从而更好地贴合对象。因此， RPN Loss的计算就是为了优化以上两点：</p>
+<p>$$RPN Loss = \text{Classification Loss} + \text{Bounding Box Regression Loss}$$</p>
+<ul>
+<li><strong>Classification Loss</strong>: cross_entropy(predicted _class, actual_class)</li>
+<li><strong>Bounding Box Regression Loss</strong>:$$L_{loc} = \sum_{u \in {\text{all foreground anchors}}}l_u$$</li>
+</ul>
+<p>由于bg的anchor没有可以回归的target bbox，这里只对所有fg的regression loss求和。计算某个bg anchor的regression loss的方法：</p>
+<p>$$l_u = \sum_{i \in {x,y,w,h}}smooth_{L1}(u_i(predicted)-u_i(target)) $$x y w h分别对应bbox的左上角坐标和长宽。<br>体现在代码里：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">loss_rpn_bbox = net_utils.smooth_l1_loss(</span><br><span class="line">        rpn_bbox_pred, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights,</span><br><span class="line">        beta=1./9)</span><br></pre></td></tr></table></figure></p>
+<p>smooth L1 function：<br>$$smooth_{L1}(x) = \begin{cases} \frac{\sigma^2x^2}{2} &amp; \lVert x \rVert &lt; \frac{1}{\sigma^2} \ \lVert x \rVert - \frac{0.5}{\sigma^2} &amp; otherwise\end{cases}$$</p>
+<p>这里的$$\sigma$$是随机选的。</p>
+<p>因此，为了计算loss我们需要计算以下数值：</p>
+<ol>
+<li>Class labels (background or foreground) and scores for the anchor boxes</li>
+<li>Target regression coefficients for the foreground anchor boxes</li>
+</ol>
+<p>现在我们通过anchor target layer的实现来看看这些值计算过程：<br>首先我们选择在image范围内的anchor box，然后通过计算所有anchor box和所有gt box的IOU来选取好的fg box。 使用overlap信息，有两种类型的box将被标记为fg:</p>
+<ol>
+<li>type A: 对每个gt box，所有和它有最大iou overlap的fg box</li>
+<li>type B: 和某些gt box最大overlap超过一定阈值的anchor box</li>
+</ol>
+<p><img src="http://static.zybuluo.com/sixijinling/ct3ekd3g5cmjns60k0knnp2u/img_5aa13d4d911d3.png" alt="nms"></p>
+<p>体现在代码里：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Fg label: for each gt use anchors with highest overlap</span><br><span class="line"># (including ties)</span><br><span class="line">labels[anchors_with_max_overlap] = 1</span><br><span class="line"># Fg label: above threshold IOU</span><br><span class="line">labels[anchor_to_gt_max &gt;= cfg.TRAIN.RPN_POSITIVE_OVERLAP] = 1</span><br></pre></td></tr></table></figure>
+<p>需要注意的是和某gt box的overlap超过一定阈值的anchor box才被认为是fg box。这是为了避免让RPN学习注定失败的任务：要学习的box的regression coefficients和最佳匹配的gt box隔得太远。同理，overlap小于某阈值的box即为bg box。需要注意的是，fg/bg并不是“非黑即白”，而是有“don’t care”这单独的一类，用来标识既不是fg也不是bg的box，这些框也就不在loss的计算范围中。同时，“don’t care”也用来约束fg和bg的总数和比例，比如多余的fg随机标为“don’t care”。</p>
+<p>There are two additional thresholds related to the total number of background and foreground boxes we want to achieve and the fraction of this number that should be foreground. If the number of foreground boxes that pass the test exceeds the threshold, we randomly mark the  excess foreground boxes to “don’t care”. Similar logic is applied to the background boxes.</p>
+<p>Next, we compute bounding box regression coefficients between the foreground boxes and the corresponding ground truth box with maximum overlap. This is easy and one just needs to follow the formula to calculate the regression coefficients.</p>
+<p>This concludes our discussion of the anchor target layer. To recap, let’s list the parameters and input/output for this layer:</p>
+<p>一些相关参数：</p>
+<ul>
+<li><code>TRAIN.RPN_POSITIVE_OVERLAP</code>: 用来筛选fg box的阈值(Default: 0.7)</li>
+<li><code>TRAIN.RPN_NEGATIVE_OVERLAP</code>: 用来筛选bg box的阈值(Default: 0.3)。这样一来，和ground truth的overlap在0.3~0.7就是“don’t care”。</li>
+<li><code>TRAIN.RPN_BATCHSIZE</code>: fg和bg anchor的总数 (default: 256)</li>
+<li><code>TRAIN.RPN_FG_FRACTION</code>: batch size中fg的比例 (default: 0.5)。如果fg数量超过 TRAIN.RPN_BATCHSIZE$\times$ TRAIN.RPN_FG_FRACTION, 超过的部分 (根据索引随机选择) 就被标为 “don’t care”.</li>
+</ul>
+<p>输入:</p>
+<ul>
+<li>RPN Network Outputs (predicted foreground/background class labels, regression coefficients)</li>
+<li>Anchor boxes (generated by the anchor generation layer)</li>
+<li>Ground truth boxes</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>Good foreground/background boxes and associated class labels</li>
+<li>Target regression coefficients</li>
+</ul>
+<h3 id="2-4-Proposal-Target-Layer"><a href="#2-4-Proposal-Target-Layer" class="headerlink" title="2.4 Proposal Target Layer"></a>2.4 Proposal Target Layer</h3><p>前面提到proposal layer负责产生ROI list，而Proposal Target Layer负责从这个list中选出可信的ROI。这些ROI将经过 crop pooling从feature map中crop出相应区域，传给后面的classification layer（head_to_tail）.</p>
+<p>和anchor target layer相似，Proposal Target Layer的重要性在于：如果这一步不能选出好的候选（和ground truth 尽可能重合），后面的classification也是“巧妇难为无米之炊”。</p>
+<p>具体来说：在得到了proposal layer的roi之后，对每个ROI，计算和每个ground truth的最大重合率，这样就把ROI划分成了bg和fg：</p>
+<ul>
+<li>fg ROI：和每个ground truth的重合都超过了阈值（<code>TRAIN.FG_THRESH</code>, default: 0.5）</li>
+<li>bg ROI：最大重合率阈值在<code>TRAIN.BG_THRESH_LO</code>和 <code>TRAIN.BG_THRESH_HI</code> (default 0.1, 0.5 respectively)之间。</li>
+</ul>
+<p>这个过程可以理解为一种“hard negative mining”：把更难的bg 样本输送给classifier。</p>
+<p>在这之后，要计算每个ROI和与它最接近的ground truth box之间的regression target（这一步也包含bg ROI，因为这些ROI也有重合的ground truth box）。所有类别的regression target如下：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/dzkgskozvpbqmx6kdkf35gft/img_5aa32302afc0b-1.png" alt="img_5aa32302afc0b-1.png-83kB"></p>
+<p>这个bbox_inside_weights起一个mask的作用，只有对分类正确的fg roi才是1，而所有bg都是0，这样就只计算fg的loss，不管bg的，但是算分类loss的时候还是都考虑。</p>
+<p>输入：</p>
+<ul>
+<li>ROIs produced by the proposal layer</li>
+<li>ground truth information</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>Selected foreground and background ROIs that meet overlap criteria.</li>
+<li>Class specific target regression coefficients for the ROIs</li>
+</ul>
+<p>参数：</p>
+<ul>
+<li>TRAIN.FG_THRESH: (default: 0.5) Used to select foreground ROIs. ROIs whose max overlap with a ground truth box exceeds FG_THRESH are marked foreground</li>
+<li>TRAIN.BG_THRESH_HI: (default 0.5)</li>
+<li>TRAIN.BG_THRESH_LO: (default 0.1) These two thresholds are used to select background ROIs. ROIs whose max overlap falls between BG_THRESH_HI and BG_THRESH_LO are marked background</li>
+<li>TRAIN.BATCH_SIZE: (default 128) Maximum number of foreground and background boxes selected.</li>
+<li>TRAIN.FG_FRACTION: (default 0.25). Number of foreground boxes can’t exceed BATCH_SIZE*FG_FRACTION</li>
+</ul>
+<h2 id="3-Crop-Pooling-layer"><a href="#3-Crop-Pooling-layer" class="headerlink" title="3.Crop Pooling layer"></a>3.Crop Pooling layer</h2><p>有了Proposal Target Layer计算的ROI的包含class label、regression coefficients的regression target，下一步就是从从feature map中提取ROI对应区域。所抽取的区域将参与tail部分的网络，并最终输出每个ROI对应的class probability distribution 和 regression coefficients，这也就是Crop Pooling layer的任务。其关键思想可以参考<a href="http://www.telesens.co/2018/03/11/object-detection-and-classification-using-r-cnns/#ITEM-1455-7" target="_blank" rel="noopener">Spatial Transformation Networks</a>，其目标是提供一个warping function（ a $$2\times 3$$ affine transformation matrix）：将输入的feature map映射到warped feature map，如下图：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/fzk6ue5q4avnq790p0xef3j8/img_5aa402baba3a1-1.png" alt="crop pooling"></p>
+<p>包括两步：</p>
+<ul>
+<li>$$\begin{bmatrix} x_i^s \ y_i^s \end{bmatrix} = \begin{bmatrix} \theta_{11} &amp; \theta_{12} &amp; \theta_{13} \ \theta_{21} &amp; \theta_{22} &amp; \theta_{23} \end{bmatrix}\begin{bmatrix} x_i^t \ y_i^t \ 1\end{bmatrix} $$. 这里$$x_i^s, y_i^s, x_i^t, y_i^t$$ 是 height/width normalized coordinates (similar to the texture coordinates used in graphics), 所以$$ -1 \leq x_i^s, y_i^s, x_i^t, y_i^t \leq 1$$.</li>
+<li>第二步, 输入的source map经过source坐标的采样输出destination map。在这一步中，每个 $$(x_i^s, y_i^s)$$坐标都定义了输入中sampling kernel(for example bi-linear sampling kernel) 所应用的空间位置，从而得到输出的feature map中每个pixel的值</li>
+</ul>
+<p><img src="http://static.zybuluo.com/sixijinling/jxcixxdomu4s3dxe6mkhtnni/img_5aa4255fdacb6.png" alt="img_5aa4255fdacb6.png-118.4kB"></p>
+<p>不同的pooling模式：</p>
+<ul>
+<li>crop</li>
+<li>align</li>
+</ul>
+<p>主要用到Pytorch的<strong>torch.nn.functional.affine_grid</strong> 和torch.nn.functional.grid_sample</p>
+<p>crop pooling的步骤：</p>
+<ol>
+<li>ROI坐标 $\div$ head网络下采样的倍数（也就是stride）。需要特别指出的是：proposal target layer给出的ROI坐标是原图尺度上的（默认800$\times$600），因此映射到feature map之前要先除stride（默认是16，前面解释过）。</li>
+<li>affine transformation matrix（仿射变换矩阵）</li>
+<li>最关键的一点在于后面的分类网接收的是固定大小输入，因此这一步需要把矩形窗</li>
+</ol>
+<h2 id="4-Classification-Layer"><a href="#4-Classification-Layer" class="headerlink" title="4.Classification Layer"></a>4.Classification Layer</h2><p>crop pooling layer基于proposal target layer生成的ROI boxes和“head” network的convolutional feature maps，生成square feature maps。 feature maps接下来通过ResNet的layer4、沿着spatial维的average pooling，结果(called “fc7” in code) 是每个ROI的一维特征向量。过程如下：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/kip2q7kejresvo9f74nu2xn3/img_5aa55c81eac0a.png" alt="classification layer"></p>
+<p>fc之后得到的一维特征向量被送到两个全连接网络中：<code>bbox_pred_net</code> and <code>cls_score_net</code></p>
+<ul>
+<li><code>cls_score_net</code>：生成roi每个类别的score（softmax之后就是概率了）</li>
+<li><code>bbox_pred_net</code>：结合两者得到最终的bbox坐标<ul>
+<li>class specific bounding box regression coefficients</li>
+<li>原来proposal target layer生成的 bbox 坐标</li>
+</ul>
+</li>
+</ul>
+<p>过程如下：</p>
+<p><img src="http://static.zybuluo.com/sixijinling/xtlc2ntcxq99hkcz06k8zs7k/img_5aa55c97f3287.png" alt="img_5aa55c97f3287.png-62.8kB"></p>
+<p>有意思的是，训练classification layer得到的loss也会反向传播给RPN。这是因为用来做crop pooling的ROI box坐标不仅是RPN产生的 regression coefficients应用到anchor box上的结果，其本身也是网络输出。因此，在反传的时候，误差会通过roi pooling layer传播到RPN layer。好在crop pooling在Pytorch中有内部实现，省去了计算梯度的麻烦。</p>
+<h4 id="计算-Classification-Layer-Loss"><a href="#计算-Classification-Layer-Loss" class="headerlink" title="计算 Classification Layer Loss"></a>计算 Classification Layer Loss</h4><p>这个阶段要把不同物体的标签考虑进来了，所以是一个多分类问题。使用交叉熵计算分类Loss：</p>
+<p>这个阶段依然要计算bounding box regression loss，和前面的R区别PN的区别在于：</p>
+<ul>
+<li>RPN的是为了让bbox更紧凑地贴合物体。 anchor target layer算得的target regression coefficients需要将roi box和离它最近的ground truth bbox对齐。</li>
+<li>classification layer中的是针对各个类别的。也就是说，对每个roi、每个类别都会生成一套coefficient。只有那些分类正确了的box才能参与，分类错误的直接不考虑了。</li>
+</ul>
+<blockquote>
+<p>代码实现上：使用了mask array将for循环操作转化成了矩阵乘法。mask array标注了每个anchor的正确物体类别。</p>
+</blockquote>
+<p>考虑到计算Classification Layer Loss和计算RPN Loss十分相似，在此先讲。</p>
+<p>$$\text{Classification Layer Loss} = \text{Classification Loss} + \text{Bounding Box Regression Loss}$$</p>
+<p>classification layer和RPN的关键区别是：RPN处理的是bg/fg的问题，classification layer处理的是所有的物体分类（加上bg）</p>
+<ul>
+<li><strong>classification loss</strong>：cross entropy loss with the true object class and predicted class score as the parameters. 计算过程如下:</li>
+</ul>
+<p><img src="http://static.zybuluo.com/sixijinling/gtg0hic03zafemdwc7yjol5n/img_5aa1cd250f265-1.png" alt="img_5aa1cd250f265-1.png-22.8kB"></p>
+<p><img src="http://static.zybuluo.com/sixijinling/ko6f7dt80ai9w5sfb85m1e2v/img_5aa1bf41503d4-1%20.png" alt="img_5aa1bf41503d4-1 .png-16.7kB"></p>
+<ul>
+<li><strong>bounding box regression loss</strong>:和RPN的时候类似，除了现在 regression coefficients是针对class的. 也就是说，会针对每个object类型计算 regression coefficients. 显然，对某anchor box来说，最大重合的gt box所属的类别算得的 target regression coefficients 才是可用的。在计算loss时，会以mask array的形式标记出每个anchor box的正确class。分类错误的其余class 的 regression coefficients 就被忽略了. This mask array allows the computation of loss to be a matrix multiplication as opposed to requiring a for-each loop.</li>
+</ul>
+<p>因此计算Classification Layer Loss需要以下3个数值:</p>
+<ul>
+<li>预测的class label和bbox regression coefficients (these are outputs of the classification network)</li>
+<li>每个 anchor box的class labels</li>
+<li>Target bounding box regression coefficients</li>
+</ul>
+<h1 id="Mask-RCNN"><a href="#Mask-RCNN" class="headerlink" title="Mask-RCNN"></a>Mask-RCNN</h1><p><a href="https://github.com/multimodallearning/pytorch-mask-rcnn" target="_blank" rel="noopener">Mask RCNN的Pytorch实现</a>，<a href="https://arxiv.org/pdf/1703.06870.pdf" target="_blank" rel="noopener">原始论文</a>。</p>
+<p>mask rcnn里默认的mask head是conv层，也可以通过MRCNN.<code>USE_FC_OUTPUT</code>设置使用FC层。</p>
+<ul>
+<li>做分割的话，关键是roi pooling时候的对齐问题，mask rcnn提出roi align<br>face++提出precise roi pooling，使用$x/16$而不是$[x/16]$，使用bilinear interpolation</li>
+<li>分隔开分割和分类两个任务，mask rcnn中对每个类别都会生成一个mask，或者是class-agnostic的实验中，不管类别直接生成mask，效果都不错</li>
+<li>[关于mask rcnn实现的讨论][241]，kaggle上也有一个做医疗图像的demo</li>
+</ul>
+<h1 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h1><p><img src="http://static.zybuluo.com/sixijinling/oesmj70d6c1cybe1ukfme81a/img_5aa70ff399c57.png" alt="inference"></p>
+<p><img src="http://static.zybuluo.com/sixijinling/iam1jbw1cy9yh421dnpk521j/img_5aa580271bea6.png" alt="predict"><br>The red boxes show the top 6 anchors ranked by score. Green boxes show the anchor boxes after applying the regression parameters computed by the RPN network. The green boxes appear to fit the underlying object more tightly. Note that after applying the regression parameters, a rectangle remains a rectangle, i.e., there is no shear. Also note the significant overlap between rectangles. This redundancy is addressed by applying non-maxima suppression</p>
+<p><img src="http://static.zybuluo.com/sixijinling/zw21rkn6g6epcsnjmp6aanw6/img_5aa5809cc7206.png" alt="img_5aa5809cc7206.png-625.4kB"><br>Red boxes show the top 5 bounding boxes before NMS, green boxes show the top 5 boxes after NMS. By suppressing overlapping boxes, other boxes (lower in the scores list) get a chance to move up</p>
+<p><img src="http://static.zybuluo.com/sixijinling/qp5523r1dm9dvkx40vmbc8is/img_5aa581709aa82.png" alt="img_5aa581709aa82.png-652.1kB"><br>From the final classification scores array (dim: n, 21), we select the column corresponding to a certain foreground object, say car. Then, we select the row corresponding to the max score in this array. This row corresponds to the proposal that is most likely to be a car. Let the index of this row be car_score_max_idx Now, let the array of final bounding box coordinates (after applying the regression coefficients) be bboxes (dim: n,21*4). From this array, we select the row corresponding to car_score_max_idx. We expect that the bounding box corresponding to the car column should fit the car in the test image better than the other bounding boxes (which correspond to the wrong object classes). This is indeed the case. The red box corresponds to the original proposal box, the blue box is the calculated bounding box for the car class and the white boxes correspond to the other (incorrect) foreground classes. It can be seen that the blue box fits the actual car better than the other boxes.</p>
+<p>For showing the final classification results, we apply another round of NMS and apply an object detection threshold to the class scores. We then draw all transformed bounding boxes corresponding to the ROIs that meet the detection threshold. The result is shown below.</p>
+<p><img src="http://static.zybuluo.com/sixijinling/3w0vrvap36yevoy0cnelb0fn/img_5aa5827c1d42c.png" alt="img_5aa5827c1d42c.png-896.9kB"></p>
+<h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1><h2 id="非极大值抑制（non-maximum-suppression，nms）"><a href="#非极大值抑制（non-maximum-suppression，nms）" class="headerlink" title="非极大值抑制（non-maximum suppression，nms）"></a>非极大值抑制（non-maximum suppression，nms）</h2><p><img src="http://static.zybuluo.com/sixijinling/pw80rvcl6ocrbbqslbekme2j/UNADJUSTEDNONRAW_thumb_5e2.jpg" alt="UNADJUSTEDNONRAW_thumb_5e2.jpg-87.6kB"></p>
+<p><img src="http://static.zybuluo.com/sixijinling/5qfym3rpsdgyxs35izkg23u4/img_5aa7c828703ab.png" alt="img_5aa7c828703ab.png-978.8kB"></p>
+<p>上图左边的黑色数字代表fg的概率</p>
+<ul>
+<li>standard NMS (boxes are ranked by y coordinate of bottom right corner). This results in the box with a lower score being retained. The second figure uses modified NMS (boxes are ranked by foreground scores).</li>
+</ul>
+<p><img src="http://static.zybuluo.com/sixijinling/zknxyptjoaa3pzbyw1a4dxd7/img_5aa7c84451f81.png" alt="img_5aa7c84451f81.png-975kB"></p>
+<ul>
+<li>This results in the box with the highest foreground score being retained, which is more desirable. In both cases, the overlap between the boxes is assumed to be higher than the NMS overlap threhold.</li>
+</ul>
+<p><a href="https://zhuanlan.zhihu.com/p/31427728" target="_blank" rel="noopener">讲nms（non-maximum suppression）的文章</a></p>
+<h2 id="针对小物体"><a href="#针对小物体" class="headerlink" title="针对小物体"></a>针对小物体</h2><p>每个小红点之间就是16像素的间隔了，如果要检测特别细小的物体，这么大的下采样就很危险了。于是，为了尽量不破坏细小物体的清晰度，参考<a href="https://github.com/rbgirshick/py-faster-rcnn/issues/86" target="_blank" rel="noopener">github上关于检测微小物体的讨论</a>，我尝试了两种方案：</p>
+<h3 id="1-降低下采样倍数"><a href="#1-降低下采样倍数" class="headerlink" title="1. 降低下采样倍数"></a>1. 降低下采样倍数</h3><p>为了方便实验，我给网络增加了一个参数<code>downsample</code>，用来控制下采样倍数，相应地调整网络结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parser.add_argument(&apos;--downsample&apos;, dest=&apos;downsample_rate&apos;,</span><br><span class="line">                  help=&apos;downsample&apos;,</span><br><span class="line">                  default=16, type=int) # 原网络默认16倍</span><br></pre></td></tr></table></figure>
+<p>需要注意的是：</p>
+<ul>
+<li>一旦改变下采样，同时还要改变feature_stride和spatial_scale。否则预测框框就变成了边缘的线条（同时loss_rpn_cls奇高）。比如VGG16（降采样8倍）：<ul>
+<li>__C.feat_stride’: 8”</li>
+<li>self.spatial_scale to (1/8)</li>
+</ul>
+</li>
+<li>vgg16尝试4倍下采样：去掉了stage5的卷积，保障输入图像最短边在1200</li>
+</ul>
+<h3 id="2-切割原图"><a href="#2-切割原图" class="headerlink" title="2. 切割原图"></a>2. 切割原图</h3><ul>
+<li>训练数据切patch：将原图切分为四等份再训练，保障大部分图的清晰度不被压缩。这样一来，标注也要做调整：<ul>
+<li>一种方式是重新生成新的子图标注，新写一个yourdata.py；</li>
+<li>另一种偷懒方式则是修改 yourdata.py的<code>_load_XXX_anotation(self, index)</code>，使得读入每个子图，返回的也是每个子图的所有标注框。</li>
+</ul>
+</li>
+<li>测试数据为原图，沿用原来的数据读入方式即可。</li>
+</ul>
+<h3 id="训练：Minibatch-SGD"><a href="#训练：Minibatch-SGD" class="headerlink" title="训练：Minibatch SGD"></a>训练：Minibatch SGD</h3><blockquote>
+<p>Linear Scaling Rule: When the minibatch size ismultiplied by k, multiply the learning rate by k.</p>
+</blockquote>
+<p>warmup：</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://arxiv.org/pdf/1506.01497.pdf" target="_blank" rel="noopener">faster rcnn原始论文</a></li>
+<li>如果想了解object detection的发展史，可以看<a href="https://tryolabs.com/blog/2017/08/30/object-detection-an-overview-in-the-age-of-deep-learning/" target="_blank" rel="noopener">Object Detection</a></li>
+<li>推荐阅读<a href="https://tryolabs.com/blog/2018/01/18/faster-r-cnn-down-the-rabbit-hole-of-modern-object-detection/" target="_blank" rel="noopener">Faster R-CNN: Down the rabbit hole of modern object detection</a></li>
+<li><a href="http://www.telesens.co/2018/03/11/object-detection-and-classification-using-r-cnns/" target="_blank" rel="noopener">Object Detection and Classification using R-CNNs</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="随缘集 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="随缘集 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/object-detection/" rel="tag"># object detection</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/19/art-2018-3-19-avatar/" rel="next" title="愉快地画头像">
+                <i class="fa fa-chevron-left"></i> 愉快地画头像
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/04/write-2018-12-4-Again-2018/" rel="prev" title="待从头 2018">
+                待从头 2018 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80Mjc5MS8xOTMzOA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">随缘集</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/frcmail" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:frcmail@126.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友链
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.guancha.cn/" title="观察者网" target="_blank">观察者网</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码结构"><span class="nav-number">2.</span> <span class="nav-text">代码结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据输入"><span class="nav-number">3.</span> <span class="nav-text">数据输入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#图像预处理"><span class="nav-number">3.1.</span> <span class="nav-text">图像预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正负采样"><span class="nav-number">3.2.</span> <span class="nav-text">正负采样</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Generalized-RCNN结构"><span class="nav-number">4.</span> <span class="nav-text">Generalized RCNN结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Backbone"><span class="nav-number">4.1.</span> <span class="nav-text">Backbone</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Resnet"><span class="nav-number">4.1.1.</span> <span class="nav-text">Resnet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FPN"><span class="nav-number">4.1.2.</span> <span class="nav-text">FPN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Anchor-Generation-Layer"><span class="nav-number">4.2.</span> <span class="nav-text">1. Anchor Generation Layer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Region-Proposal-Layer"><span class="nav-number">4.3.</span> <span class="nav-text">2. Region Proposal Layer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Region-Proposal-Network"><span class="nav-number">4.3.1.</span> <span class="nav-text">2.1 Region Proposal Network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Proposal-Layer"><span class="nav-number">4.3.2.</span> <span class="nav-text">2.2 Proposal Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Anchor-Target-Layer"><span class="nav-number">4.3.3.</span> <span class="nav-text">2.3 Anchor Target Layer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#计算RPN-loss："><span class="nav-number">4.3.3.1.</span> <span class="nav-text">计算RPN loss：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Proposal-Target-Layer"><span class="nav-number">4.3.4.</span> <span class="nav-text">2.4 Proposal Target Layer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Crop-Pooling-layer"><span class="nav-number">4.4.</span> <span class="nav-text">3.Crop Pooling layer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Classification-Layer"><span class="nav-number">4.5.</span> <span class="nav-text">4.Classification Layer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#计算-Classification-Layer-Loss"><span class="nav-number">4.5.0.1.</span> <span class="nav-text">计算 Classification Layer Loss</span></a></li></ol></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#Mask-RCNN"><span class="nav-number">5.</span> <span class="nav-text">Mask-RCNN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Inference"><span class="nav-number">6.</span> <span class="nav-text">Inference</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Appendix"><span class="nav-number">7.</span> <span class="nav-text">Appendix</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#非极大值抑制（non-maximum-suppression，nms）"><span class="nav-number">7.1.</span> <span class="nav-text">非极大值抑制（non-maximum suppression，nms）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#针对小物体"><span class="nav-number">7.2.</span> <span class="nav-text">针对小物体</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-降低下采样倍数"><span class="nav-number">7.2.1.</span> <span class="nav-text">1. 降低下采样倍数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-切割原图"><span class="nav-number">7.2.2.</span> <span class="nav-text">2. 切割原图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#训练：Minibatch-SGD"><span class="nav-number">7.2.3.</span> <span class="nav-text">训练：Minibatch SGD</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">7.3.</span> <span class="nav-text">Reference</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">随缘集</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
