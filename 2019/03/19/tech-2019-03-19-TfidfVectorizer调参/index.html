@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="动画,">
+  <meta name="keywords" content="sklearn,">
 
 
 
@@ -79,22 +79,18 @@
 
 
 
-<meta name="description" content="Animation experiments. Update every year~">
-<meta name="keywords" content="动画">
+<meta name="description" content="Recording">
+<meta name="keywords" content="sklearn">
 <meta property="og:type" content="article">
-<meta property="og:title" content="动画笔记">
-<meta property="og:url" content="http://frcmail.github.io/2017/10/05/art-2017-10-5-animation/index.html">
+<meta property="og:title" content="TfidfVectorizer调参">
+<meta property="og:url" content="http://frcmail.github.io/2019/03/19/tech-2019-03-19-TfidfVectorizer调参/index.html">
 <meta property="og:site_name" content="剑来|黑客与画家">
-<meta property="og:description" content="Animation experiments. Update every year~">
+<meta property="og:description" content="Recording">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://static.zybuluo.com/sixijinling/jtdamfgixldzlhybq4w73ddi/psb.gif">
-<meta property="og:image" content="http://static.zybuluo.com/sixijinling/195gt9ihi0rqc1x6ix6609v8/psb%20%281%29.gif">
-<meta property="og:image" content="http://static.zybuluo.com/sixijinling/ezwhlhuvqahv1q3k21pdc1r0/psb.gif">
-<meta property="og:updated_time" content="2019-02-21T10:30:42.919Z">
+<meta property="og:updated_time" content="2019-03-19T09:00:24.498Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="动画笔记">
-<meta name="twitter:description" content="Animation experiments. Update every year~">
-<meta name="twitter:image" content="http://static.zybuluo.com/sixijinling/jtdamfgixldzlhybq4w73ddi/psb.gif">
+<meta name="twitter:title" content="TfidfVectorizer调参">
+<meta name="twitter:description" content="Recording">
 
 
 
@@ -124,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://frcmail.github.io/2017/10/05/art-2017-10-5-animation/">
+  <link rel="canonical" href="http://frcmail.github.io/2019/03/19/tech-2019-03-19-TfidfVectorizer调参/">
 
 
 
 
 
-  <title>动画笔记 | 剑来|黑客与画家</title>
+  <title>TfidfVectorizer调参 | 剑来|黑客与画家</title>
   
 
 
@@ -287,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://frcmail.github.io/2017/10/05/art-2017-10-5-animation/">
+    <link itemprop="mainEntityOfPage" href="http://frcmail.github.io/2019/03/19/tech-2019-03-19-TfidfVectorizer调参/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="随缘集">
@@ -304,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">动画笔记</h1>
+          <h1 class="post-title" itemprop="name headline">TfidfVectorizer调参</h1>
         
 
         <div class="post-meta">
@@ -316,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-05T18:32:00+08:00">
-                2017-10-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-19T15:04:00+08:00">
+                2019-03-19
               </time>
             
 
@@ -339,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/art/" itemprop="url" rel="index">
-                    <span itemprop="name">art</span>
+                  <a href="/categories/write/" itemprop="url" rel="index">
+                    <span itemprop="name">write</span>
                   </a>
                 </span>
 
@@ -368,7 +364,7 @@
 
           
               <div class="post-description">
-                  Animation experiments. Update every year~
+                  Recording
               </div>
           
 
@@ -385,10 +381,75 @@
       
 
       
-        <h1 id="2013"><a href="#2013" class="headerlink" title="2013"></a>2013</h1><p><img src="http://static.zybuluo.com/sixijinling/jtdamfgixldzlhybq4w73ddi/psb.gif" alt="psb.gif-650.3kB"></p>
-<h1 id="2017"><a href="#2017" class="headerlink" title="2017"></a>2017</h1><p><img src="http://static.zybuluo.com/sixijinling/195gt9ihi0rqc1x6ix6609v8/psb%20%281%29.gif" alt="psb (1).gif-138.9kB"></p>
-<p><img src="http://static.zybuluo.com/sixijinling/ezwhlhuvqahv1q3k21pdc1r0/psb.gif" alt="psb.gif-11.9kB"></p>
+        <h1 id="TfidfVectorizer调参"><a href="#TfidfVectorizer调参" class="headerlink" title="TfidfVectorizer调参"></a>TfidfVectorizer调参</h1><p>TfidfVectorizer可以把原始文本转化为tf-idf的特征矩阵，从而为后续的文本相似度计算</p>
+<p>token_pattern：这个参数使用正则表达式来分词，其默认参数为r”(?u)\b\w\w+\b”，其中的两个\w决定了其匹配长度至少为2的单词，默认值只匹配长度≥2的单词，一般来说，长度为1的单词在英文中一般是无足轻重的，但在中文里，就可能有一些很重要的单字词，所以设置匹配规则为：token_pattern=r”(?u)\b\w+\b”</p>
+<p>max_df/min_df: [0.0, 1.0]内浮点数或正整数, 默认值=1.0</p>
+<p>设置为浮点数时，过滤出现在超过max_df/低于min_df比例的句子中的词语；正整数时,则是超过max_df句句子。一般过滤出现在超过60%的句子中的词语，max_df=0.6</p>
+<p>stop_words: list类型</p>
+<p>直接过滤指定的停用词。比如stop_words=[“是”, “的”]</p>
+<p>vocabulary: dict类型</p>
+<p>只使用特定的词汇，这一参数的使用有时能帮助我们专注于一些词语，比如我对本诗中表达感情的一些特定词语（甚至标点符号）感兴趣，就可以设定这一参数。比如vocabulary={“我”:0, “呀”:1,”!”:2}</p>
+<p>vectorizer = CountVectorizer() #构建一个计算词频（TF）的玩意儿，当然这里面不足是可以做这些</p>
+<p>transformer = TfidfTransformer() #构建一个计算TF-IDF的玩意儿</p>
+<p>tfidf = transformer.fit_transform(vectorizer.fit_transform(corpus))</p>
+<p>vectorizer.fit_transform(corpus)将文本corpus输入，得到词频矩阵</p>
+<p>将这个矩阵作为输入，用transformer.fit_transform(词频矩阵)得到TF-IDF权重矩阵</p>
+<p>TfidfTransformer + CountVectorizer  =  TfidfVectorizer</p>
+<p>值得注意的是，CountVectorizer()和TfidfVectorizer()里面都有一个成员叫做vocabulary_（后面带一个下划线）</p>
+<p>这个成员的意义是词典索引，对应的是TF-IDF权重矩阵的列，只不过一个是私有成员，一个是外部输入，原则上应该保持一致。</p>
+<p>vectorizer = TfidfVectorizer(stop_words=stpwrdlst, sublinear_tf = True, max_df = 0.5)</p>
+<p>关于参数：</p>
+<p>input：string{‘filename’, ‘file’, ‘content’}</p>
+<pre><code>如果是&apos;filename&apos;，序列作为参数传递给拟合器，预计为文件名列表，这需要读取原始内容进行分析
 
+如果是&apos;file&apos;，序列项目必须有一个”read“的方法（类似文件的对象），被调用作为获取内存中的字节数
+
+否则，输入预计为序列串，或字节数据项都预计可直接进行分析。
+</code></pre><p>encoding：string， ‘utf-8’by default</p>
+<pre><code>如果给出要解析的字节或文件，此编码将用于解码
+</code></pre><p>decode_error: {‘strict’, ‘ignore’, ‘replace’}</p>
+<pre><code>如果一个给出的字节序列包含的字符不是给定的编码，指示应该如何去做。默认情况下，它是&apos;strict&apos;，这意味着的UnicodeDecodeError将提高，其他值是&apos;ignore&apos;和&apos;replace&apos;
+</code></pre><p>strip_accents: {‘ascii’, ‘unicode’, None}</p>
+<pre><code>在预处理步骤中去除编码规则(accents)，”ASCII码“是一种快速的方法，仅适用于有一个直接的ASCII字符映射，&quot;unicode&quot;是一个稍慢一些的方法，None（默认）什么都不做
+</code></pre><p>analyzer：string，{‘word’, ‘char’} or callable</p>
+<pre><code>定义特征为词（word）或n-gram字符，如果传递给它的调用被用于抽取未处理输入源文件的特征序列
+</code></pre><p>preprocessor：callable or None（default）</p>
+<pre><code>当保留令牌和”n-gram“生成步骤时，覆盖预处理（字符串变换）的阶段
+</code></pre><p>tokenizer：callable or None(default)</p>
+<pre><code>当保留预处理和n-gram生成步骤时，覆盖字符串令牌步骤
+</code></pre><p>ngram_range: tuple(min_n, max_n)</p>
+<pre><code>要提取的n-gram的n-values的下限和上限范围，在min_n &lt;= n &lt;= max_n区间的n的全部值
+</code></pre><p>stop_words：string {‘english’}, list, or None(default)</p>
+<pre><code>如果未english，用于英语内建的停用词列表
+
+如果未list，该列表被假定为包含停用词，列表中的所有词都将从令牌中删除
+
+如果None，不使用停用词。max_df可以被设置为范围[0.7, 1.0)的值，基于内部预料词频来自动检测和过滤停用词
+</code></pre><p>lowercase：boolean， default True</p>
+<pre><code>在令牌标记前转换所有的字符为小写
+</code></pre><p>token_pattern：string</p>
+<pre><code>正则表达式显示了”token“的构成，仅当analyzer == ‘word’时才被使用。两个或多个字母数字字符的正则表达式（标点符号完全被忽略，始终被视为一个标记分隔符）。
+</code></pre><p>max_df： float in range [0.0, 1.0] or int, optional, 1.0 by default</p>
+<pre><code>当构建词汇表时，严格忽略高于给出阈值的文档频率的词条，语料指定的停用词。如果是浮点值，该参数代表文档的比例，整型绝对计数值，如果词汇表不为None，此参数被忽略。
+</code></pre><p>min_df：float in range [0.0, 1.0] or int, optional, 1.0 by default</p>
+<p>当构建词汇表时，严格忽略低于给出阈值的文档频率的词条，语料指定的停用词。如果是浮点值，该参数代表文档的比例，整型绝对计数值，如果词汇表不为None，此参数被忽略。</p>
+<p>max_features： optional， None by default</p>
+<pre><code>如果不为None，构建一个词汇表，仅考虑max_features--按语料词频排序，如果词汇表不为None，这个参数被忽略
+</code></pre><p>vocabulary：Mapping or iterable， optional</p>
+<pre><code>也是一个映射（Map）（例如，字典），其中键是词条而值是在特征矩阵中索引，或词条中的迭代器。如果没有给出，词汇表被确定来自输入文件。在映射中索引不能有重复，并且不能在0到最大索引值之间有间断。
+</code></pre><p>binary：boolean， False by default</p>
+<pre><code>如果未True，所有非零计数被设置为1，这对于离散概率模型是有用的，建立二元事件模型，而不是整型计数
+</code></pre><p>dtype：type， optional</p>
+<pre><code>通过fit_transform()或transform()返回矩阵的类型
+</code></pre><p>norm：’l1’, ‘l2’, or None,optional</p>
+<pre><code>范数用于标准化词条向量。None为不归一化
+</code></pre><p>use_idf：boolean， optional</p>
+<pre><code>启动inverse-document-frequency重新计算权重
+</code></pre><p>smooth_idf：boolean，optional</p>
+<pre><code>通过加1到文档频率平滑idf权重，为防止除零，加入一个额外的文档
+</code></pre><p>sublinear_tf：boolean， optional</p>
+<pre><code>应用线性缩放TF，例如，使用1+log(tf)覆盖tf
+</code></pre>
       
     </div>
     
@@ -434,7 +495,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/动画/" rel="tag"># 动画</a>
+            <a href="/tags/sklearn/" rel="tag"># sklearn</a>
           
         </div>
       
@@ -462,8 +523,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/01/tech-2017-8-1-phoneme/" rel="next" title="基于音素识别的语音相似度研究">
-                <i class="fa fa-chevron-left"></i> 基于音素识别的语音相似度研究
+              <a href="/2019/02/26/tech-2019-02-26-tensorbord2use/" rel="next" title="tensorbord使用">
+                <i class="fa fa-chevron-left"></i> tensorbord使用
               </a>
             
           </div>
@@ -471,10 +532,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/18/write-2017-10-18-star/" rel="prev" title="仰望星空">
-                仰望星空 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -641,7 +698,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#2013"><span class="nav-number">1.</span> <span class="nav-text">2013</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2017"><span class="nav-number">2.</span> <span class="nav-text">2017</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TfidfVectorizer调参"><span class="nav-number">1.</span> <span class="nav-text">TfidfVectorizer调参</span></a></li></ol></div>
             
 
           </div>
